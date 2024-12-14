@@ -1,10 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import fetchWithRetries from "@/utility/fetchWithRetries";
 
-
 export async function GET(req: NextRequest) {
     try {
-        const res = await fetchWithRetries(`${process.env.CAR_API}/cars`,)
+        const res = await fetch(`${process.env.CAR_API}/cars`,{
+            next: {
+                revalidate: 5,
+                tags: ['cars'],
+            },
+            cache: 'force-cache'
+        })
 
         if (!res.ok) {
             return NextResponse.json(
