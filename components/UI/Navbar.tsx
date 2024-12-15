@@ -2,14 +2,53 @@
 
 import { useRouter } from "next/navigation";
 import ThemeToggleButton from "./ThemeToggleButton";
+import { Typography, AppBar } from "@mui/material";
+import { useState, useEffect } from "react";
 
 export default function NavBar() {
     const router = useRouter();
+    const [isVisible, setIsVisible] = useState(true);
+    const [prevScrollPos, setPrevScrollPos] = useState(0);
+
+    useEffect(() => {
+        const handleScroll = () => {
+          const currentScrollPos = window.scrollY;
+    
+          if (prevScrollPos > currentScrollPos) {
+            setIsVisible(true);
+          } else {
+            setIsVisible(false);
+          }
+    
+          setPrevScrollPos(currentScrollPos);
+        };
+    
+        window.addEventListener('scroll', handleScroll);
+    
+        return () => {
+          window.removeEventListener('scroll', handleScroll);
+        };
+      }, [prevScrollPos]);
     
     return(
-        <nav className="flex justify-between p-4 items-center text-text-default pb-0 sm:p-6 md:p-8 sm:pb-0 md:pb-0">
-            <h1 className="font-playWrite font-normal sm:text-5xl text-4xl lg:text-6xl md:text-5xl m-0 hover:text-accent-default cursor-pointer transition-all ease-in-out delay-75" onClick={() => router.push('/')}>Cars Mania</h1>
+        <AppBar 
+            sx={{
+                position: 'fixed',
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                p: {xs: 1, sm: 2},
+                alignItems: 'center',
+                top: 0,
+                left: 0,
+                transform: isVisible ? 'translateY(0)' : 'translateY(-100%)',
+                transition: '.5s ease-in-out'
+            }}
+        >
+            <Typography variant="h1">
+                Carvana
+            </Typography>
             <ThemeToggleButton />
-        </nav>
+        </AppBar>
     )
 }

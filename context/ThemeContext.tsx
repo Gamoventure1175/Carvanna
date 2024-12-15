@@ -1,38 +1,44 @@
 'use client'
 
-import {ThemeContextProps, Theme} from "@/types/ThemeContext"
+import {ThemeContextProps, Mode} from "@/types/ThemeContext"
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
+import customTheme from "@/theme/customTheme";
+import { CssBaseline, ThemeProvider } from "@mui/material";
 
 const ThemeContext = createContext<ThemeContextProps | undefined>(undefined);
 
-export const ThemeProvider = ({children}: {children:ReactNode}) => {
-    const [theme, setTheme] = useState<Theme>('light');
+export const ThemeProviderContext = ({children}: {children:ReactNode}) => {
+    const [mode, setMode] = useState<Mode>('light');
     const [isMounted, setIsMounted] = useState(false);
 
     useEffect(() => {
         setIsMounted(true)
-        const savedTheme = localStorage.getItem('theme') as Theme
-        setTheme(savedTheme)
+        const savedMode = localStorage.getItem('mode') as Mode
+        setMode(savedMode)
     }, [])
 
     useEffect(() => {
-        localStorage.setItem("theme", theme);
-        document.documentElement.classList.remove('light','dark');
-        document.documentElement.classList.add(theme)
-    }, [theme, isMounted])
+        localStorage.setItem("mode", mode);
+    }, [mode, isMounted])
 
-    const toggleTheme = () => {
-        setTheme((prev) => prev === 'light' ? 'dark' : 'light') 
+    const toggleMode = () => {
+        setMode((prev) => prev === 'light' ? 'dark' : 'light') 
     }
+
+    const theme = customTheme(mode === 'light' || mode === 'dark' ? mode : 'light');
+
 
     if (!isMounted) {
         return null
     }
 
     return (
-        <ThemeContext.Provider value={{theme, toggleTheme}}>
-            {children}
-        </ThemeContext.Provider>
+        <ThemeProvider theme={theme}>
+            <ThemeContext.Provider value={{mode, toggleMode}}>
+                <CssBaseline />
+                {children}
+            </ThemeContext.Provider>
+        </ThemeProvider>
     )
 }
 
