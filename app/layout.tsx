@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import '@/styles/globals.css'
 import { ThemeProviderContext } from "@/context/ThemeContext";
 import { CssBaseline } from "@mui/material";
+import NavBar from "@/components/UI/Navbar";
 
 
 export const metadata: Metadata = {
@@ -19,6 +20,9 @@ export default function RootLayout({
       <body>
         <ThemeProviderContext>
           <CssBaseline />
+          <header role="banner">
+            <NavBar />
+          </header>
             {children}
           <footer role="contentinfo">
 
