@@ -41,7 +41,7 @@ export const typography = {
     h2: {
         ...responsiveFontSizes({xs: 24, sm: 32, md: 44, lg: 48, xl: 58}),
         fontWeight: 400,
-        lineHeight: 1.2,
+        lineHeight: 1.1,
     },
     h3: {
         fontSize: 42

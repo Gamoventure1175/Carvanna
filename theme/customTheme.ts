@@ -10,12 +10,17 @@ const getDesignTokens = (mode: 'light'|'dark'):ThemeOptions => ({
             light: brandColor1[100],
             main: brandColor1[200],
             dark: brandColor1[300],
-            contrastText:mode === 'dark' ? brandColor2[200] : brandColor2[50] 
+            contrastText:mode === 'dark' ? brandColor2[50] : secondary[700],
+            ...(mode === 'dark' && {
+                light: secondary[500],
+                main: secondary[600],
+                dark: secondary[700],
+            })
         },
         secondary: {
-            light: secondary[600],
-            main: secondary[700],
-            dark: secondary[800],
+            light: secondary[300],
+            main: secondary[400],
+            dark: secondary[900],
         },
         error: {
             dark: mode === 'dark'? errorAccent[800] : errorAccent[400],
@@ -30,18 +35,18 @@ const getDesignTokens = (mode: 'light'|'dark'):ThemeOptions => ({
         brandColor2,
         divider: mode === 'dark' ? alpha(brandColor2[700], .3) : alpha(brandColor2[300], .5),
         background: {
-            default: blackAccent[50],
-            paper: brandColor2[50],
+            default: brandColor2[50],
+            paper: brandColor2[100],
             ...(mode === 'dark' && {
-                default: blackAccent[700],
-                paper: brandColor2[600]
+                default: blackAccent[600],
+                paper: brandColor2[700]
             })
         },
         text: {
             primary: secondary[700],
             secondary: blackAccent[600],
             ...(mode === 'dark' && {
-                primary: secondary[400],
+                primary: brandColor2[50],
                 secondary: blackAccent[300]
             })
         }

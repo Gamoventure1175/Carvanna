@@ -37,7 +37,7 @@ const HeaderBanner = () => {
 
       }}>
         <Image alt='car' src={Porsche} fill={true} style={{
-          objectFit: 'cover',
+          objectFit: 'contain',
           objectPosition: getObjectPosition(window.innerWidth < 600),
         }}
          />

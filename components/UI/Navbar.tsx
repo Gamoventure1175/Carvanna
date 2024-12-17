@@ -32,23 +32,24 @@ export default function NavBar() {
     
     return(
         <AppBar 
-            sx={{
-                position: 'fixed',
-                boxSizing: 'border-box',
-                display: 'flex',
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                p: {xs: 1, sm: 2},
-                alignItems: 'center',
-                top: 0,
-                left: '50%',
-                transform: isVisible ? 'translate(-50%,0)' : 'translate(-50%,-100%)',
-                transition: '.4s ease-in-out',
-                maxWidth: isAtTheTop ? '100%' : `calc(100% - 92px)`,
-                marginTop: isAtTheTop ? 0 : '8px',
-                borderRadius: isAtTheTop ? 0 : 3,
-                boxShadow: isAtTheTop ? 'none' : '',
-            }}
+            sx={(theme) => ({
+              position: 'fixed',
+              boxSizing: 'border-box',
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              p: {xs: 1, sm: 2},
+              alignItems: 'center',
+              top: 0,
+              left: '50%',
+              transform: isVisible ? 'translate(-50%,0)' : 'translate(-50%,-100%)',
+              transition: 'max-width .4s ease-in-out, transform .4s ease-in-out, box-shadow .4s ease-in-out, margin-top .4s ease-in-out ',
+              maxWidth: isAtTheTop ? '100%' : `calc(100% - 92px)`,
+              marginTop: isAtTheTop ? 0 : '8px',
+              borderRadius: isAtTheTop ? 0 : 6,
+              boxShadow: isAtTheTop ? 'none' : '',
+              backgroundColor: theme.palette.primary.main,
+          })}
         >
             <Typography variant="h1" component={'button'} onClick={() => router.push('/')}>
                 Carvana
