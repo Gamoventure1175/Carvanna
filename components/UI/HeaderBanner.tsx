@@ -4,6 +4,8 @@ import Image from 'next/image'
 import Porsche from '@/public/porsche.png'
 import { Box, Container, Typography } from '@mui/material'
 
+//use Aspect Ratio component
+
 const HeaderBanner = () => {
   const getObjectPosition = (isMobile: boolean) => (isMobile ? 'center center' : '10% center');
   return (

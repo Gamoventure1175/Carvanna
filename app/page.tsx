@@ -1,6 +1,8 @@
+import AllCarBrands from "@/components/Car/AllCarBrands";
+import ExoticCarBrands from "@/components/Car/ExoticCarBrands";
 import SearchCar from "@/components/Car/SearchCar";
 import HeaderBanner from "@/components/UI/HeaderBanner";
-import { Container, Input, Box, Typography } from "@mui/material";
+import { Box, Container } from "@mui/material";
 
 export default function Home() {
   return (
@@ -9,9 +11,11 @@ export default function Home() {
         <HeaderBanner />
       </Box>
       <main>
-        <Box sx={{height: '200vh'}}>
+        <Container >
           <SearchCar />
-        </Box>
+          <AllCarBrands />
+          <ExoticCarBrands />
+        </Container>
       </main>
     </>
   );

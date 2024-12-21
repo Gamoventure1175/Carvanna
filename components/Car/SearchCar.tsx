@@ -18,7 +18,7 @@ const SearchCar = () => {
         flexDirection: 'row-reverse',
         alignItems: 'end',
         justifyContent: 'start',
-        width: '70%',
+        width: '60%',
         border: '2px solid',
         borderBottom: '0px',
         borderColor: theme.palette.primary.main,
