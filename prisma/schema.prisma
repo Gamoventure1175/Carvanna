@@ -1,0 +1,176 @@
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator zod {
+  provider = "zod-prisma-types"
+  output   = "../validation/generated/"
+}
+
+//User Schema 
+model User {
+  //Essential info
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId()
+  email         String    @unique
+  emailVerified DateTime?
+  username      String    @unique
+  password      String
+  isVerified    Boolean   @default(false)
+  role          UserRole  @default(USER)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  //Personal info
+  name            String?
+  bio             String?
+  driversLicense  String?   @unique
+  profileImageUrl String?
+  gender          Gender?   @default(MALE)
+  dateOfBirth     DateTime?
+  phone           String?
+  location        String?
+
+  //RelationShips
+  cars          Car[]
+  followers     Follower[]     @relation("UserFollowers")
+  following     Follower[]     @relation("UserFollowings")
+  posts         Post[]
+  sessions      Session[]
+  notifications Notification[]
+
+  //Many-to-many relationship via UserAccount
+  accounts UserAccount[]
+  Account  Account[]
+  Like     Like[]
+}
+
+//Defining roles
+enum UserRole {
+  USER
+  ADMIN
+}
+
+//Defining gender
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+//Car Schema
+model Car {
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  ownerId           String   @db.ObjectId
+  owner             User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  brand             String
+  model             String
+  year              Int
+  licensePlate      String   @unique
+  carImageUrl       String?
+  color             String?
+  engineType        String?
+  transmission      String?
+  mileage           Int?
+  registrationState String?
+  description       String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  //Relation to Like
+  likes Like[]
+}
+
+//Follower Schema
+model Follower {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId()
+  follower    User     @relation("UserFollowers", fields: [followerId], references: [id], onDelete: Cascade)
+  following   User     @relation("UserFollowings", fields: [followingId], references: [id], onDelete: Cascade)
+  followerId  String   @db.ObjectId
+  followingId String   @db.ObjectId
+  createdAt   DateTime @default(now())
+}
+
+//Post Schema 
+model Post {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String   @db.ObjectId
+  content   String
+  imageUrl  String
+  createdAt DateTime @default(now())
+
+  //Relation to Like
+  likes Like[]
+}
+
+//Like Schema
+model Like {
+  id     String @id @default(auto()) @map("_id") @db.ObjectId
+  post   Post   @relation(fields: [postId], references: [id])
+  postId String @db.ObjectId
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String @db.ObjectId
+  car    Car    @relation(fields: [carId], references: [id], onDelete: Cascade)
+  carId  String @db.ObjectId
+}
+
+//VerificationToken Schema
+model VerificationToken {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  identifier String   @unique
+  token      String
+  expires    DateTime
+
+  @@unique([token, identifier])
+}
+
+//Account schema
+model Account {
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId            String   @db.ObjectId
+  provider          String
+  providerAccountId String
+  refreshToken      String?
+  accessToken       String?
+  expiresAt         Int?
+  createdAt         DateTime @default(now())
+
+  //Many-to-many relationship via UserAccount
+  userAccounts UserAccount[]
+}
+
+//UserAccount schema
+model UserAccount {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  accountId String   @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  account   Account  @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+}
+
+//Session schema
+model Session {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId       String   @db.ObjectId
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expires      DateTime
+  sessionToken String   @unique
+  accessToken  String   @unique
+}
+
+//Notification schema 
+model Notification {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  content   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+}

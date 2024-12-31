@@ -14,7 +14,7 @@ export const ThemeProviderContext = ({children}: {children:ReactNode}) => {
     useEffect(() => {
         setIsMounted(true)
         const savedMode = localStorage.getItem('mode') as Mode
-        setMode(savedMode)
+        if (savedMode) setMode(savedMode)
     }, [])
 
     useEffect(() => {

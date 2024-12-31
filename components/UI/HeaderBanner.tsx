@@ -38,7 +38,7 @@ const HeaderBanner = () => {
         width: '100%',
 
       }}>
-        <Image alt='car' src={Porsche} fill={true} style={{
+        <Image alt='car' priority sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw' src={Porsche} fill={true} style={{
           objectFit: 'contain',
           objectPosition: getObjectPosition(window.innerWidth < 600),
         }}
