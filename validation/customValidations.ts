@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { UserSchema } from './generated';
+import { CarSchema, UserSchema } from './generated';
 
 export const ExtendedUserSchema = UserSchema.extend({
     email: z
@@ -59,7 +59,82 @@ export const ExtendedUserSchema = UserSchema.extend({
     dateOfBirth: z
         .coerce.date()
         .nullable()
-        .default(null)
+        .default(null),
+    role: z
+        .string()
+        .default('USER')
 });
 
 export type ExtendedUserType = z.infer<typeof ExtendedUserSchema>;
+
+
+export const ExtendedCarSchema = CarSchema.extend({
+    brand: z
+        .string()
+        .nonempty({message: 'Brand name cannot be empty'})
+        .min(2, "Brand name must be at least 2 characters long")
+        .max(50, "Brand name must be at most 50 characters long")
+        .regex(/^[A-Za-z\s]+$/, "Brand name must only contain letters and spaces"),
+    model: z
+            .string()
+            .nonempty({message: 'Model name cannot be empty'})
+            .min(1, "Model name must be at least 1 character long")
+            .max(50, "Model name must be at most 50 characters long"),
+    year: z
+            .number()
+            .int("Year must be an integer")
+            .nonnegative()
+            .min(1886, "Year must be no earlier than 1886")
+            .max(new Date().getFullYear(), "Year cannot be in the future"),
+    licensePlate: z
+            .string()
+            .nonempty({message: 'License plate cannot be empty'})
+            .min(1, "License plate cannot be empty")
+            .max(15, "License plate must be at most 15 characters long")
+            .regex(/^[A-Za-z0-9\s-]+$/, "License plate must only contain alphanumeric characters, spaces, or dashes"),
+    carImageUrl: z
+            .string()
+            .nonempty({message: 'Car image url cannot be empty'})
+            .url("Car image URL must be a valid URL")
+            
+            ,
+    color: z
+            .string()
+            .nonempty({message: 'Color of the car cannot be empty'})
+            .regex(/^[A-Za-z\s]+$/, "Color must only contain letters and spaces")
+            .max(20, "Color name must be at most 20 characters long")
+            ,
+    engineType: z
+            .string()
+            .nonempty({message: "Engine type of the car cannot be empty"})
+            .max(50, "Engine type must be at most 50 characters long")
+            
+            ,
+    transmission: z
+            .string()
+            .nonempty({message: 'Transimission type of the car cannot be empty'})
+            .max(20, "Transmission type must be at most 20 characters long")
+            
+            ,
+    mileage: z
+            .number()
+            .int("Mileage must be an integer")
+            .min(0, "Mileage cannot be negative")
+            
+            ,
+    registrationState: z
+            .string()
+            .nonempty({message: "Registration state of the car cannot be empty"})
+            .regex(/^[A-Za-z\s]+$/, "Registration state must only contain letters and spaces")
+            .max(50, "Registration state must be at most 50 characters long")
+            
+            ,
+    description: z
+            .string()
+            .nonempty({message: "Description of the car cannot be empty"})
+            .max(500, "Description must be at most 500 characters long")
+            
+            ,
+})
+
+export type ExtendedCarType = z.infer<typeof ExtendedCarSchema>

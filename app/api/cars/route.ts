@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import fetchWithRetries from "@/utility/fetchWithRetries";
+import fetchWithRetries from "@/utility/data-fetch/fetchWithRetries";
 
 export async function GET(req: NextRequest) {
     try {

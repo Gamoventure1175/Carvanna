@@ -21,7 +21,7 @@ model User {
   username      String    @unique
   password      String
   isVerified    Boolean   @default(false)
-  role          UserRole  @default(USER)
+  role          String    @default("USER")
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
@@ -30,7 +30,7 @@ model User {
   bio             String?
   driversLicense  String?   @unique
   profileImageUrl String?
-  gender          Gender?   @default(MALE)
+  gender          String    @default("MALE")
   dateOfBirth     DateTime?
   phone           String?
   location        String?
@@ -47,19 +47,6 @@ model User {
   accounts UserAccount[]
   Account  Account[]
   Like     Like[]
-}
-
-//Defining roles
-enum UserRole {
-  USER
-  ADMIN
-}
-
-//Defining gender
-enum Gender {
-  MALE
-  FEMALE
-  OTHER
 }
 
 //Car Schema
@@ -131,18 +118,25 @@ model VerificationToken {
 
 //Account schema
 model Account {
-  id                String   @id @default(auto()) @map("_id") @db.ObjectId
-  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId            String   @db.ObjectId
+  id                String        @id @default(auto()) @map("_id") @db.ObjectId
+  user              User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId            String        @db.ObjectId
+  type              String
   provider          String
   providerAccountId String
-  refreshToken      String?
-  accessToken       String?
-  expiresAt         Int?
-  createdAt         DateTime @default(now())
-
+  refresh_token     String?       @db.String
+  access_token      String?       @db.String
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?       @db.String
+  session_state     String?       @db.String
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
   //Many-to-many relationship via UserAccount
-  userAccounts UserAccount[]
+  userAccounts      UserAccount[]
+
+  @@unique([provider, providerAccountId])
 }
 
 //UserAccount schema
@@ -162,7 +156,11 @@ model Session {
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   expires      DateTime
   sessionToken String   @unique
-  accessToken  String   @unique
+  deviceInfo   String?
+  ipAddress    String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 //Notification schema 
