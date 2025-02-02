@@ -13,7 +13,8 @@ export const ExtendedUserSchema = UserSchema.extend({
         .regex(/[A-Z]/, { message: "Password must contain at least one uppercase letter" })
         .regex(/[a-z]/, { message: "Password must contain at least one lowercase letter" })
         .regex(/[0-9]/, { message: "Password must contain at least one number" })
-        .regex(/[@$!%*?&]/, { message: "Password must contain at least one special character (@, $, !, %, *, ?, &)" }),
+        .regex(/[@$!%*?&]/, { message: "Password must contain at least one special character (@, $, !, %, *, ?, &)" })
+        .nullable(),
     username: z
         .string()
         .nonempty({ message: "Username cannot be empty" })
@@ -62,7 +63,22 @@ export const ExtendedUserSchema = UserSchema.extend({
         .default(null),
     role: z
         .string()
-        .default('USER')
+        .refine((val) => ['USER', 'ADMIN'].includes(val), {
+            message: 'Role must be one of USER or ADMIN'
+        })
+        .default('USER'),
+    oauthOnly: z
+        .boolean()
+        .default(false),
+    gender: z
+        .string()
+        .refine((val) => ["MALE", "FEMALE", "OTHER"].includes(val), {
+            message: "Gender must be one of MALE, FEMALE, or OTHER",
+        })
+        .default('MALE'),
+    emailVerified: z
+        .boolean()
+        .default(false)
 });
 
 export type ExtendedUserType = z.infer<typeof ExtendedUserSchema>;

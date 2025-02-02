@@ -1,7 +1,6 @@
 import { ExtendedUserSchema, ExtendedUserType } from "@/validation/customValidations"
 import prisma from "@/lib/prisma"
 import validateWithSchema from "../zod/validateWithSchema"
-import { z } from "zod"
 
 const userSelectFields = {
     id: true,
@@ -9,6 +8,7 @@ const userSelectFields = {
     emailVerified: true,
     username: true,
     password: true,
+    oauthOnly: true,
     isVerified: true,
     role: true,
     createdAt: true,
@@ -33,9 +33,13 @@ export default async function getUserByEmail(email: unknown){
         select: userSelectFields
     })
 
-    if(!user) throw new Error('User does not exist')
+    if(!user) return null
 
     const ValidatedUser = validateWithSchema(ExtendedUserSchema, user)
 
+    //Loggin the user data
+    if (process.env.NODE_ENV !== "production") {
+        console.log({ "Validated User": ValidatedUser.data });
+    }
     return ValidatedUser
 }

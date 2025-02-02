@@ -17,18 +17,19 @@ model User {
   //Essential info
   id            String    @id @default(auto()) @map("_id") @db.ObjectId()
   email         String    @unique
-  emailVerified DateTime?
+  emailVerified Boolean   @default(false)
   username      String    @unique
-  password      String
-  isVerified    Boolean   @default(false)
+  password      String?
   role          String    @default("USER")
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
+  isVerified    Boolean   @default(false)
+  oauthOnly     Boolean   @default(false)
 
   //Personal info
   name            String?
   bio             String?
-  driversLicense  String?   @unique
+  driversLicense  String?
   profileImageUrl String?
   gender          String    @default("MALE")
   dateOfBirth     DateTime?

@@ -4,17 +4,7 @@ import { ExtendedUserType } from "@/validation/customValidations"
 import prisma from "@/lib/prisma"
 
 export default async function linkOAuth(account: Account, user: ExtendedUserType) {
-    const linkedAccount = await prisma.account.findUnique({
-        where: {
-            provider_providerAccountId: {
-                provider: account.provider,
-                providerAccountId: account.providerAccountId,
-            },
-            userId: user.id,
-        }
-    })
-
-    if (!linkedAccount) {
+    try {
         const newAccount = await prisma.account.create({
             data: {
                 userId: user.id,
@@ -29,7 +19,7 @@ export default async function linkOAuth(account: Account, user: ExtendedUserType
                 id_token: account.id_token,
             }
         })
-
+    
         const userAccountLink = await prisma.userAccount.create({
             data:{
                 userId: user.id,
@@ -37,10 +27,8 @@ export default async function linkOAuth(account: Account, user: ExtendedUserType
             }
         })
 
-        console.log({'newAccount created': newAccount, 'userAndAccountLinked': userAccountLink})
-        return {'newAccount created': newAccount, 'userAndAccountLinked': userAccountLink}
+        return {'New account created': newAccount, 'User and Account linked': userAccountLink}
+    } catch (error) {
+        console.log(error)
     }
-
-    console.log({'Account already exists': linkedAccount});
-    return linkedAccount
 }
