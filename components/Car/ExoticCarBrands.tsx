@@ -1,18 +1,18 @@
-'use client'
+"use client";
 
-import { Container } from '@mui/material'
-import React from 'react'
+import { Container } from "@mui/material";
+import React from "react";
 
 const ExoticCarBrands = () => {
   return (
     <Container
-        sx={(theme) => ({
-            minHeight: '100vh'
-        })}
+      sx={(theme) => ({
+        minHeight: "100vh",
+      })}
     >
-        Exotic Cars
+      Exotic Cars
     </Container>
-  )
-}
+  );
+};
 
-export default ExoticCarBrands
+export default ExoticCarBrands;

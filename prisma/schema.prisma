@@ -17,7 +17,7 @@ model User {
   //Essential info
   id            String    @id @default(auto()) @map("_id") @db.ObjectId()
   email         String    @unique
-  emailVerified Boolean   @default(false)
+  emailVerified DateTime? @default(now())
   username      String    @unique
   password      String?
   role          String    @default("USER")

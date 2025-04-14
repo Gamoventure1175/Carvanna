@@ -1,6 +1,6 @@
 export type ThemeContextProps = {
-    mode: Mode;
-    toggleMode: () => void
-}
+  mode: Mode;
+  toggleMode: () => void;
+};
 
-export type Mode = 'dark' | 'light'
+export type Mode = "dark" | "light";

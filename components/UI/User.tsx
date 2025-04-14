@@ -1,19 +1,13 @@
-import React from 'react'
+import React from "react";
+import { auth } from "@/lib/authSetup";
 import { useSession } from "next-auth/react";
 
 function User() {
-    const {data: session} = useSession();
+  const { data: session } = useSession();
 
-    let name = 'unknown';
+  let name = session?.user.username ? session?.user.username : "unknown";
 
-    if (session) {
-        console.log(session.user?.name)
-        name = session.user?.name ?? 'signedin'
-    }
-
-  return (
-    <div>{name}</div>
-  )
+  return <div>{name}</div>;
 }
 
-export default User
+export default User;

@@ -1,5 +1,5 @@
-import { ExtendedUserSchema } from "@/validation/customValidations";
+import { ExtendedUserSchema } from "@/validation/custom/schemas";
 import { z } from "zod";
 
-export const emailSchema = ExtendedUserSchema.shape.email
-export type emailSchemaType = z.infer<typeof emailSchema>
+export const emailSchema = ExtendedUserSchema.shape.email;
+export type emailSchemaType = z.infer<typeof emailSchema>;
