@@ -8,7 +8,59 @@ export default function Home() {
         <HeaderBanner />
       </Box>
       <main>
-        <Container></Container>
+        <Container>
+          <div>
+            HI
+          </div>
+          <div>
+            HI
+          </div>
+          <div>
+            HI
+          </div>
+          <div>
+            HI
+          </div>
+          <div>
+            HI
+          </div>
+          <div>
+            HI
+          </div>
+          <div>
+            HI
+          </div>
+          <div>
+            HI
+          </div>
+          <div>
+            HI
+          </div>
+          <div>
+            HI
+          </div>
+          <div>
+            HI
+          </div>
+          <div>
+            HI
+          </div>
+          <div>
+            HI
+          </div>
+          <div>
+            HI
+          </div>
+          <div>
+            HI
+          </div>
+          <div>
+            HI
+          </div>
+          <div>
+            HI
+          </div>
+        </Container>
       </main>
     </>
   );

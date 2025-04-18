@@ -2,7 +2,7 @@ import {
   ExtendedUserSchema,
   ExtendedUserType,
 } from "@/validation/custom/schemas";
-import prisma from "@/lib/prisma";
+import prisma from "@/lib/prisma/prisma";
 import validateWithSchema from "../zod/validateWithSchema";
 
 const userSelectFields = {

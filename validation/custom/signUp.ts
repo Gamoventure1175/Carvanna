@@ -6,7 +6,7 @@ export const signUpSchema = ExtendedUserSchema.pick({
   username: true,
   password: true,
 }).extend({
-  //This is only to make the password non-nullable instead of the default nullable from the original User Schema
+  //This is only to make the password non-nullable instead of the default nullable from the original User Schema and to add an otp
   password: z
     .string()
     .nonempty({ message: "Password cannot be empty" })
@@ -25,9 +25,9 @@ export const signUpSchema = ExtendedUserSchema.pick({
 });
 
 export const signUpStepsSchema = [
-  z.object({username: signUpSchema.shape.username}),
-  z.object({password: signUpSchema.shape.password}),
-  z.object({email: signUpSchema.shape.email}),
+  z.object({ username: signUpSchema.shape.username }),
+  z.object({ password: signUpSchema.shape.password }),
+  z.object({ email: signUpSchema.shape.email }),
 ];
 
 export const profileSchema = ExtendedUserSchema.omit({
@@ -42,5 +42,14 @@ export const profileSchema = ExtendedUserSchema.omit({
   password: true,
 });
 
+export const otpSchema = z.object({
+  otp: z
+  .string()
+  .nonempty({ message: "OTP cannot be empty" })
+  .length(6, { message: "OTP must be exactly 6 digits" })
+  .regex(/^\d{6}$/, { message: "OTP must contain only digits" })
+})
+
+export type otpSchemaType = z.infer<typeof otpSchema>
 export type signUpSchemaType = z.infer<typeof signUpSchema>;
 export type profileSchemaType = z.infer<typeof profileSchema>;

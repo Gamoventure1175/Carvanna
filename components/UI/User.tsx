@@ -1,5 +1,4 @@
 import React from "react";
-import { auth } from "@/lib/authSetup";
 import { useSession } from "next-auth/react";
 
 function User() {

@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { Typography, AppBar } from "@mui/material";
 import { useState, useEffect } from "react";
 import ThemeToggleButton from "./ThemeToggleButton";
+import User from "./User";
 
 export default function NavBar() {
   const router = useRouter();
@@ -56,7 +57,7 @@ export default function NavBar() {
       >
         Carvana
       </Typography>
-      <ThemeToggleButton />
+      <User />
     </AppBar>
   );
 }

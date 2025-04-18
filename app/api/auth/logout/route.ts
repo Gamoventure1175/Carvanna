@@ -1,4 +1,4 @@
-import { auth } from "@/lib/authSetup";
+import { auth } from "@/lib/auth/authSetup";
 import { revokeRefreshToken } from "@/utility/auth/revokeTokens";
 import {} from "next-auth";
 import { NextRequest, NextResponse } from "next/server";

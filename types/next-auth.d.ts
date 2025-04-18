@@ -1,13 +1,12 @@
-import NextAuth, { DefaultSession } from "next-auth";
-import { AdapterUser } from "next-auth/adapters";
+import NextAuth, { AdapterUser } from "next-auth";
 import { SessionUserType } from "@/validation/custom/user";
 
 declare module "next-auth" {
   interface Session {
-    user: SessionUserType & DefaultSession["user"] & { emailVerified: boolean };
+    user: SessionUserType;
   }
 
   interface AdapterUser {
-    emailVerified: boolean;
+    emailVerified?: boolean;
   }
 }

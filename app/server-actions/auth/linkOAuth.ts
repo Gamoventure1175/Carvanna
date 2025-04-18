@@ -1,7 +1,7 @@
 "use server";
 import { Account } from "next-auth";
 import { ExtendedUserType } from "@/validation/custom/schemas";
-import prisma from "@/lib/prisma";
+import prisma from "@/lib/prisma/prisma";
 
 export default async function linkOAuth(
   account: Account,
