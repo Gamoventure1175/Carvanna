@@ -36,12 +36,6 @@ export const ExtendedUserSchema = UserSchema.extend({
     .max(50, { message: "Name must not exceed 50 characters" })
     .nullable()
     .default(null),
-  bio: z
-    .string()
-    .nonempty({ message: "Bio cannot be empty" })
-    .max(160, { message: "Bio must not exceed 160 characters" })
-    .nullable()
-    .default(null),
   phone: z
     .string()
     .nonempty({ message: "Phone number cannot be empty" })
@@ -71,7 +65,6 @@ export const ExtendedUserSchema = UserSchema.extend({
     .url({ message: "Profile image URL must be a valid URL" })
     .nullable()
     .default(null),
-  dateOfBirth: z.coerce.date().nullable().default(null),
   role: z
     .string()
     .refine((val) => ["USER", "ADMIN"].includes(val), {
@@ -79,12 +72,6 @@ export const ExtendedUserSchema = UserSchema.extend({
     })
     .default("USER"),
   oauthOnly: z.boolean().default(false),
-  gender: z
-    .string()
-    .refine((val) => ["MALE", "FEMALE", "OTHER"].includes(val), {
-      message: "Gender must be one of MALE, FEMALE, or OTHER",
-    })
-    .default("MALE"),
   emailVerified: z
     .date()
     .nullable()
@@ -124,40 +111,15 @@ export const ExtendedCarSchema = CarSchema.extend({
     .string()
     .nonempty({ message: "Car image url cannot be empty" })
     .url("Car image URL must be a valid URL"),
-
   color: z
     .string()
     .nonempty({ message: "Color of the car cannot be empty" })
     .regex(/^[A-Za-z\s]+$/, "Color must only contain letters and spaces")
     .max(20, "Color name must be at most 20 characters long"),
-  engineType: z
-    .string()
-    .nonempty({ message: "Engine type of the car cannot be empty" })
-    .max(50, "Engine type must be at most 50 characters long"),
-
-  transmission: z
-    .string()
-    .nonempty({ message: "Transimission type of the car cannot be empty" })
-    .max(20, "Transmission type must be at most 20 characters long"),
-
   mileage: z
     .number()
     .int("Mileage must be an integer")
     .min(0, "Mileage cannot be negative"),
-
-  registrationState: z
-    .string()
-    .nonempty({ message: "Registration state of the car cannot be empty" })
-    .regex(
-      /^[A-Za-z\s]+$/,
-      "Registration state must only contain letters and spaces",
-    )
-    .max(50, "Registration state must be at most 50 characters long"),
-
-  description: z
-    .string()
-    .nonempty({ message: "Description of the car cannot be empty" })
-    .max(500, "Description must be at most 500 characters long"),
 });
 
 export type ExtendedCarType = z.infer<typeof ExtendedCarSchema>;

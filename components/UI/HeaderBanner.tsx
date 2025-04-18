@@ -22,17 +22,8 @@ const HeaderBanner = () => {
         justifyContent: "space-between",
       })}
     >
-      <Box
-        sx={{
-          flex: { xs: 0, md: 1 },
-        }}
-      >
-        <Typography variant="h2">Get Your Car Today</Typography>
-        <Typography variant="body1">
-          Choose from a number of exotics and daily drives
-        </Typography>
-      </Box>
-      <Box
+      
+      {/* <Box
         sx={{
           position: "relative",
           flex: 1,
@@ -51,7 +42,7 @@ const HeaderBanner = () => {
             objectPosition: getObjectPosition(window.innerWidth < 600),
           }}
         />
-      </Box>
+      </Box> */}
     </Container>
   );
 };

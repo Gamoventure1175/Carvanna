@@ -14,8 +14,8 @@ import validateWithSchema from "@/utility/zod/validateWithSchema";
 import { Adapter } from "next-auth/adapters";
 import { sign } from "jsonwebtoken";
 import { parsedEnv } from "@/validation/custom/env";
-import createRefreshToken from "@/utility/auth/refreshToken";
-import { rotateTokens } from "@/utility/auth/rotateTokens";
+import createRefreshToken from "@/app/server-actions/auth/refreshToken";
+import { rotateTokens } from "@/app/server-actions/auth/rotateTokens";
 
 export const AuthCredentials = ExtendedUserSchema.pick({
   email: true,
@@ -164,7 +164,7 @@ export const authOptions: NextAuthConfig = {
         token.isVerified = validatedUser.isVerified;
         token.oauthOnly = validatedUser.oauthOnly;
         token.profileImageUrl = validatedUser.profileImageUrl;
-        token.emailVerified = validatedUser.emailVerified
+        token.emailVerified = validatedUser.emailVerified;
 
         token.accessToken = sign(
           { userId: validatedUser.id, role: validatedUser.role },
@@ -195,12 +195,15 @@ export const authOptions: NextAuthConfig = {
         isVerified: token.isVerified as boolean,
         profileImageUrl: token.profileImageUrl as string,
         accessToken: token.accessToken as string,
-        emailVerified: token.emailVerified as (Date & boolean)
+        emailVerified: token.emailVerified as Date & boolean,
       };
       return session;
     },
   },
-  pages: {},
+  pages: {
+    signIn: '/auth/signIn',
+    
+  },
 };
 
 export const { handlers, signIn, signOut, auth } = NextAuth(authOptions);

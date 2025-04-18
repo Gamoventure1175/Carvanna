@@ -45,7 +45,7 @@ export default function NavBar() {
           "max-width .4s ease-in-out, transform .4s ease-in-out, box-shadow .4s ease-in-out, margin-top .4s ease-in-out ",
         maxWidth: isAtTheTop ? "100%" : `calc(100% - 92px)`,
         marginTop: isAtTheTop ? 0 : "8px",
-        borderRadius: isAtTheTop ? 0 : 6,
+        borderRadius: isAtTheTop ? 0 : 10,
         boxShadow: isAtTheTop ? "none" : "",
         backgroundColor: theme.palette.primary.main,
       })}

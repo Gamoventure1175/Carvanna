@@ -1,6 +1,5 @@
 import { auth } from "@/lib/auth/authSetup";
-import { revokeRefreshToken } from "@/utility/auth/revokeTokens";
-import {} from "next-auth";
+import { revokeRefreshToken } from "@/app/server-actions/auth/revokeTokens";
 import { NextRequest, NextResponse } from "next/server";
 
 export default async function DELETE(req: NextRequest) {
@@ -10,7 +9,7 @@ export default async function DELETE(req: NextRequest) {
     if (!session) {
       return NextResponse.json(
         { error: "Unauthorized session" },
-        { status: 401 },
+        { status: 401 }
       );
     }
 

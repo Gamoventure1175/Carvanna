@@ -15,96 +15,85 @@ generator zod {
 //User Schema 
 model User {
   //Essential info
-  id            String    @id @default(auto()) @map("_id") @db.ObjectId()
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
   email         String    @unique
-  emailVerified DateTime? @default(now())
-  username      String    @unique
+  emailVerified DateTime?
   password      String?
-  role          String    @default("USER")
+  username      String    @unique
+  isVerified    Boolean   @default(false)
+  role          UserRole  @default(USER)
+  oauthOnly     Boolean   @default(false)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
-  isVerified    Boolean   @default(false)
-  oauthOnly     Boolean   @default(false)
 
   //Personal info
   name            String?
-  bio             String?
-  driversLicense  String?
-  profileImageUrl String?
-  gender          String    @default("MALE")
-  dateOfBirth     DateTime?
   phone           String?
+  driversLicense  String? @unique
+  profileImageUrl String?
   location        String?
 
-  //RelationShips
-  cars          Car[]
-  followers     Follower[]     @relation("UserFollowers")
-  following     Follower[]     @relation("UserFollowings")
-  posts         Post[]
-  sessions      Session[]
-  notifications Notification[]
+  //Relationships
+  cars      Car[]
+  reminders ReminderJob[]
 
   //Many-to-many relationship via UserAccount
-  accounts UserAccount[]
   Account  Account[]
-  Like     Like[]
+  accounts UserAccount[]
+  Session  Session[]
+}
+
+//Defining roles
+enum UserRole {
+  USER
+  ADMIN
 }
 
 //Car Schema
 model Car {
-  id                String   @id @default(auto()) @map("_id") @db.ObjectId
-  ownerId           String   @db.ObjectId
-  owner             User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-  brand             String
-  model             String
-  year              Int
-  licensePlate      String   @unique
-  carImageUrl       String?
-  color             String?
-  engineType        String?
-  transmission      String?
-  mileage           Int?
-  registrationState String?
-  description       String?
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  ownerId      String   @db.ObjectId
+  owner        User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  brand        String
+  model        String
+  year         Int
+  mileage      Int?
+  color        String?
+  carImageUrl  String?
+  licensePlate String   @unique
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
-  //Relation to Like
-  likes Like[]
+  //Relations related to the car services
+  serviceLogs ServiceLog[]
+  insurance   Insurance[]
+  pucChecks   PUCCheck[]
+  ReminderJob ReminderJob[]
 }
 
-//Follower Schema
-model Follower {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId()
-  follower    User     @relation("UserFollowers", fields: [followerId], references: [id], onDelete: Cascade)
-  following   User     @relation("UserFollowings", fields: [followingId], references: [id], onDelete: Cascade)
-  followerId  String   @db.ObjectId
-  followingId String   @db.ObjectId
-  createdAt   DateTime @default(now())
+//ServiceType Schema
+model ServiceType {
+  id           String @id @default(auto()) @map("_id") @db.ObjectId
+  name         String @unique // e.g., "OIL_CHANGE"
+  label        String // e.g., "Oil Change"
+  intervalKm   Int? // e.g., every 5000 km
+  intervalDays Int? // e.g., every 180 days
+
+  serviceLogs ServiceLog[]
 }
 
-//Post Schema 
-model Post {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId    String   @db.ObjectId
-  content   String
-  imageUrl  String
+//ServiceLog Schema
+model ServiceLog {
+  id            String      @id @default(auto()) @map("_id") @db.ObjectId
+  carId         String      @db.ObjectId
+  car           Car         @relation(fields: [carId], references: [id], onDelete: Cascade)
+  serviceTypeId String      @db.ObjectId
+  serviceType   ServiceType @relation(fields: [serviceTypeId], references: [id])
+  serviceDate   DateTime
+  mileageAtTime Int?
+  notes         String?
+
   createdAt DateTime @default(now())
-
-  //Relation to Like
-  likes Like[]
-}
-
-//Like Schema
-model Like {
-  id     String @id @default(auto()) @map("_id") @db.ObjectId
-  post   Post   @relation(fields: [postId], references: [id])
-  postId String @db.ObjectId
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId String @db.ObjectId
-  car    Car    @relation(fields: [carId], references: [id], onDelete: Cascade)
-  carId  String @db.ObjectId
 }
 
 //VerificationToken Schema
@@ -164,12 +153,44 @@ model Session {
   updatedAt DateTime @updatedAt
 }
 
-//Notification schema 
-model Notification {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  userId    String   @db.ObjectId
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  content   String
-  isRead    Boolean  @default(false)
+//Reminder job schema for bullMQ
+model ReminderJob {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String   @db.ObjectId
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  carId       String   @db.ObjectId
+  car         Car      @relation(fields: [carId], references: [id], onDelete: Cascade)
+  type        String // e.g., "SERVICE", "PUC", "INSURANCE"
+  referenceId String // Points to related serviceLog/PUC/insurance
+  scheduledAt DateTime
+  sent        Boolean  @default(false)
+
+  createdAt DateTime @default(now())
+}
+
+//Insurance Schema
+model Insurance {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  carId       String   @db.ObjectId
+  car         Car      @relation(fields: [carId], references: [id], onDelete: Cascade)
+  provider    String
+  policyNo    String
+  startDate   DateTime
+  expiryDate  DateTime
+  amount      Float?
+  documentUrl String?
+
+  createdAt DateTime @default(now())
+}
+
+//PUC Schema 
+model PUCCheck {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  carId       String   @db.ObjectId
+  car         Car      @relation(fields: [carId], references: [id], onDelete: Cascade)
+  checkedAt   DateTime
+  validTill   DateTime
+  documentUrl String?
+
   createdAt DateTime @default(now())
 }
