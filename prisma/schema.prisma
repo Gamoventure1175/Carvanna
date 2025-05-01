@@ -97,16 +97,6 @@ model ServiceLog {
   createdAt DateTime @default(now())
 }
 
-//VerificationToken Schema
-model VerificationToken {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  identifier String   @unique
-  token      String
-  expires    DateTime
-
-  @@unique([token, identifier])
-}
-
 //Account schema
 model Account {
   id                String        @id @default(auto()) @map("_id") @db.ObjectId
