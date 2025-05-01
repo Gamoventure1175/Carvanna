@@ -29,15 +29,13 @@ export default async function createOAuthAccount(
         //createdAt = default value is current time stamp
         //updatedAt = default value is when last updated
         //isVerified = default value is 'false'
+        //onBoarded = default value is 'false'
         oauthOnly: true,
 
         //PERSONAL INFO
         name: getNameForOauth(profile),
-        bio: null,
         driversLicense: null,
         profileImageUrl: profile.picture,
-        //gender = default value is 'MALE'
-        dateOfBirth: null,
         phone: null,
         location: null,
       },

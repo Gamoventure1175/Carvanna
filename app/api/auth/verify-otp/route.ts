@@ -10,7 +10,7 @@ export async function POST(req: NextRequest) {
   const validatedOtp = validateWithSchema(otpSchema.shape.otp, otp);
 
   const result = await verifyOtp(validatedEmail, validatedOtp);
-  await deleteOtp(email)
+  await deleteOtp(email);
 
   if (!result) {
     return NextResponse.json(

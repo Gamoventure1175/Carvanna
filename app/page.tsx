@@ -9,57 +9,23 @@ export default function Home() {
       </Box>
       <main>
         <Container>
-          <div>
-            HI
-          </div>
-          <div>
-            HI
-          </div>
-          <div>
-            HI
-          </div>
-          <div>
-            HI
-          </div>
-          <div>
-            HI
-          </div>
-          <div>
-            HI
-          </div>
-          <div>
-            HI
-          </div>
-          <div>
-            HI
-          </div>
-          <div>
-            HI
-          </div>
-          <div>
-            HI
-          </div>
-          <div>
-            HI
-          </div>
-          <div>
-            HI
-          </div>
-          <div>
-            HI
-          </div>
-          <div>
-            HI
-          </div>
-          <div>
-            HI
-          </div>
-          <div>
-            HI
-          </div>
-          <div>
-            HI
-          </div>
+          <div>HI</div>
+          <div>HI</div>
+          <div>HI</div>
+          <div>HI</div>
+          <div>HI</div>
+          <div>HI</div>
+          <div>HI</div>
+          <div>HI</div>
+          <div>HI</div>
+          <div>HI</div>
+          <div>HI</div>
+          <div>HI</div>
+          <div>HI</div>
+          <div>HI</div>
+          <div>HI</div>
+          <div>HI</div>
+          <div>HI</div>
         </Container>
       </main>
     </>

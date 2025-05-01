@@ -72,6 +72,7 @@ export const ExtendedUserSchema = UserSchema.extend({
     })
     .default("USER"),
   oauthOnly: z.boolean().default(false),
+  onBoarded: z.boolean().default(false),
   emailVerified: z
     .date()
     .nullable()

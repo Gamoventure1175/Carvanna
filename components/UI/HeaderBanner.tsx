@@ -22,7 +22,6 @@ const HeaderBanner = () => {
         justifyContent: "space-between",
       })}
     >
-      
       {/* <Box
         sx={{
           position: "relative",

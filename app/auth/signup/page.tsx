@@ -1,7 +1,7 @@
 "use client";
 
-import SignUpAction from "@/app/server-actions/auth/signUp";
-import { signIn } from "next-auth/react";
+import SignUpAction from "@/app/server-actions/auth/signUp/signUp";
+import { getSession, signIn } from "next-auth/react";
 import {
   otpSchema,
   signUpSchemaType,
@@ -12,18 +12,21 @@ import { Box, Button, TextField, Typography } from "@mui/material";
 import { useMemo, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Controller } from "react-hook-form";
-import { z } from 'zod'
+import { z } from "zod";
+import { useRouter } from "next/navigation";
 
-const formFields = ["username", "password", "email", 'otp'] as const;
+const formFields = ["username", "password", "email", "otp"] as const;
 
 export default function SignUp() {
   const [isOtpSent, setIsOtpSent] = useState(false);
+  const router = useRouter();
   const [step, setStep] = useState(0);
   const [formData, setFormData] = useState<Partial<signUpSchemaType>>({});
   const fullSchema = useMemo(() => {
-    return signUpStepsSchema.reduce((acc, schema) => acc.merge(schema), z.object({})).merge(otpSchema);
+    return signUpStepsSchema
+      .reduce((acc, schema) => acc.merge(schema), z.object({}))
+      .merge(otpSchema);
   }, []);
-
 
   const {
     control,
@@ -37,35 +40,46 @@ export default function SignUp() {
       username: "",
       password: "",
       email: "",
-      otp: '',
+      otp: "",
     },
     mode: "onTouched",
   });
 
   const onSubmit: SubmitHandler<signUpSchemaType> = async (data) => {
     const finalData = { ...formData, ...data };
-    const otpValue = getValues('otp')
+    const otpValue = getValues("otp");
 
     try {
-
-      const verifyRes = await fetch('/api/auth/verify-otp', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const verifyRes = await fetch("/api/auth/verify-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: finalData.email, otp: otpValue }),
-      })
+      });
 
-      const verifyData = await verifyRes.json()
+      const verifyData = await verifyRes.json();
       if (!verifyData.success) {
-        alert("Invalid or expired OTP")
-        throw Error('Error verifying the OTP')
+        alert("Invalid or expired OTP");
+        throw Error("Error verifying the OTP");
       }
-      const result = await SignUpAction(finalData as { email: string, password: string, username: string })
-      console.log('User Signed Up', result)
+      const result = await SignUpAction(
+        finalData as { email: string; password: string; username: string },
+      );
+      console.log("User Signed Up", result);
 
+      const res = await signIn("credentials", {
+        redirect: false,
+        email: finalData.email!,
+        password: finalData.password!,
+        username: finalData.username!,
+      });
 
-      await signIn('credentials', finalData as { email: string, password: string, username: string })
+      if (res?.ok) {
+        router.push("/onboarding");
+      } else {
+        throw Error("Sign in failed");
+      }
     } catch (error) {
-
+      console.log(error);
     }
   };
 
@@ -75,32 +89,35 @@ export default function SignUp() {
     if (!isValid) return;
 
     const value = getValues(currentField);
-    setFormData((prev) => ({ ...prev, [currentField]: getValues(currentField) }))
+    setFormData((prev) => ({
+      ...prev,
+      [currentField]: getValues(currentField),
+    }));
 
-    if (currentField === 'email') {
+    if (currentField === "email") {
       try {
-        const res = await fetch('/api/auth/send-otp', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+        const res = await fetch("/api/auth/send-otp", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             email: value,
-            username: getValues('username'),
-          })
-        })
+            username: getValues("username"),
+          }),
+        });
 
         const data = await res.json();
         if (data.success) {
-          setIsOtpSent(true)
-          setStep((prev) => prev + 1)
+          setIsOtpSent(true);
+          setStep((prev) => prev + 1);
         } else {
-          alert('Failed to send OTP')
+          alert("Failed to send OTP");
         }
       } catch (error) {
-        console.error("OTP send error:", error)
-        alert('Something went wrong!')
+        console.error("OTP send error:", error);
+        alert("Something went wrong!");
       }
     } else {
-      setStep((prev) => prev + 1)
+      setStep((prev) => prev + 1);
     }
   };
 
@@ -161,12 +178,12 @@ export default function SignUp() {
         )}
         {step === 3 && (
           <Controller
-            name='otp'
+            name="otp"
             control={control}
             render={({ field }) => (
               <TextField
                 {...field}
-                label='Otp'
+                label="Otp"
                 fullWidth
                 error={!!errors.otp}
                 helperText={errors.otp?.message}

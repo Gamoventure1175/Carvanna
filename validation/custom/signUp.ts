@@ -44,12 +44,12 @@ export const profileSchema = ExtendedUserSchema.omit({
 
 export const otpSchema = z.object({
   otp: z
-  .string()
-  .nonempty({ message: "OTP cannot be empty" })
-  .length(6, { message: "OTP must be exactly 6 digits" })
-  .regex(/^\d{6}$/, { message: "OTP must contain only digits" })
-})
+    .string()
+    .nonempty({ message: "OTP cannot be empty" })
+    .length(6, { message: "OTP must be exactly 6 digits" })
+    .regex(/^\d{6}$/, { message: "OTP must contain only digits" }),
+});
 
-export type otpSchemaType = z.infer<typeof otpSchema>
+export type otpSchemaType = z.infer<typeof otpSchema>;
 export type signUpSchemaType = z.infer<typeof signUpSchema>;
 export type profileSchemaType = z.infer<typeof profileSchema>;

@@ -1,14 +1,14 @@
-import { rotateTokens } from "@/app/server-actions/auth/rotateTokens";
+import { rotateTokens } from "@/app/server-actions/auth/tokens/rotateTokens";
 import { NextRequest, NextResponse } from "next/server";
 
-export default async function PUT(req: NextRequest) {
+export async function PUT(req: NextRequest) {
   try {
     const { refreshToken } = await req.json();
 
     if (!refreshToken) {
       return NextResponse.json(
         { error: "Invalid refresh token" },
-        { status: 401 }
+        { status: 401 },
       );
     }
 
@@ -18,7 +18,7 @@ export default async function PUT(req: NextRequest) {
   } catch (error) {
     return NextResponse.json(
       { error: "Invalid request body" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

@@ -4,7 +4,6 @@ import hashPassword from "@/utility/auth/hashPassword";
 import getUserByEmail from "@/utility/prisma/getUserByEmail";
 import validateWithSchema from "@/utility/zod/validateWithSchema";
 import { signUpSchema, signUpSchemaType } from "@/validation/custom/signUp";
-import bcrypt from "bcryptjs";
 
 export default async function SignUpAction(data: signUpSchemaType) {
   const validatedData = validateWithSchema(signUpSchema, data);
@@ -24,12 +23,10 @@ export default async function SignUpAction(data: signUpSchemaType) {
       role: "USER",
       oauthOnly: false,
       isVerified: false,
+      onBoarded: false,
       name: null,
-      bio: null,
       driversLicense: null,
       profileImageUrl: null,
-      gender: "MALE",
-      dateOfBirth: null,
       phone: null,
       location: null,
     },

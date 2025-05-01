@@ -1,59 +1,63 @@
 import axios from "axios";
-import { signOut } from "next-auth/react";
+import { AxiosRequestConfig } from "axios";
+import { signOut } from "../auth/authSetup";
+import { error } from "console";
 
-// Create axios instance
 const api = axios.create({
   baseURL: "/api",
 });
 
 let accessToken: string | null = null;
 
-async function fetchSession() {
-  const res = await fetch("/api/auth/session");
-  const session = await res.json();
-  if (session?.accessToken) {
-    accessToken = session.accessToken;
+// Fetches latest access token from session
+async function loadAccessToken(): Promise<string | null> {
+  try {
+    const res = await fetch("/api/auth/session");
+    const session = await res.json();
+    accessToken = session?.user?.accessToken ?? null;
+    return accessToken;
+  } catch {
+    accessToken = null;
+    return null;
   }
 }
 
 api.interceptors.request.use(
-  (config) => {
-    if (accessToken) {
-      config.headers = config.headers || {};
-      config.headers.Authorization = `Bearer ${accessToken}`;
+  async (config: AxiosRequestConfig) => {
+    const token = await loadAccessToken();
+
+    if (token) {
+      config.headers = {
+        ...config.headers,
+        Authorization: `Bearer ${token}`,
+      };
     }
+
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => Promise.reject(error),
 );
 
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
-    if (error.response?.status === 401 && !error.config._retry) {
-      error.config._retry = true;
+    const originalRequest = error.config;
 
-      try {
-        const res = await fetch("/api/auth/refresh-token", {
-          method: "POST",
-        });
-        const data = await res.json();
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
 
-        if (data?.accessToken) {
-          accessToken = data.accessToken; // Store new access token
-          error.config.headers = error.config.headers || {};
-          error.config.headers.Authorization = `Bearer ${data.accessToken}`;
-          return api(error.config); // Retry original request
-        }
-      } catch (err) {
-        await signOut();
+      await loadAccessToken();
+
+      if (accessToken) {
+        originalRequest.headers = originalRequest.headers || {};
+        originalRequest.headers.Authorization = `Bearer ${accessToken}`;
+        return api(originalRequest);
       }
+
+      await signOut();
     }
 
     return Promise.reject(error);
-  }
+  },
 );
-
-fetchSession();
-
 export default api;

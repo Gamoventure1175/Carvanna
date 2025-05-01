@@ -1,5 +1,5 @@
 import NextAuth, { AdapterUser } from "next-auth";
-import { SessionUserType } from "@/validation/custom/user";
+import { SessionUserType } from "@/validation/custom/sessionUser";
 
 declare module "next-auth" {
   interface Session {
