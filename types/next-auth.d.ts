@@ -7,6 +7,7 @@ declare module "next-auth" {
   }
 
   interface AdapterUser {
+    id: number;
     emailVerified?: boolean;
   }
 }

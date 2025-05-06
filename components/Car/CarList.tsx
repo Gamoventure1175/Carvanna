@@ -1,23 +1,23 @@
 "use client";
 
-import useCars from "@/hooks/fetchCars";
+import {
+  ExtendedCarSchema,
+  ExtendedCarType,
+} from "@/validation/custom/schemas";
+import { Box } from "@mui/material";
 import CarCard from "./CarCard";
 
-const CarList = () => {
-  const { carsData } = useCars();
-
-  carsData.map((carData) => {
-    console.log(carData);
-  });
-
-  return (
-    <div className="flex flex-wrap gap-3">
-      {Array.isArray(carsData) &&
-        carsData.map((carData) => {
-          return <CarCard key={carData.id} carData={carData} />;
-        })}
-    </div>
-  );
+type CarListProps = {
+  carsDataArray: ExtendedCarType[];
 };
 
-export default CarList;
+export default function CarList({ carsDataArray }: CarListProps) {
+  return (
+    <Box>
+      {carsDataArray &&
+        carsDataArray.map((carData) => (
+          <CarCard key={carData.id} {...carData} />
+        ))}
+    </Box>
+  );
+}

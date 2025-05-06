@@ -1,5 +1,5 @@
 import axios from "axios";
-import { AxiosRequestConfig } from "axios";
+import type { InternalAxiosRequestConfig } from "axios";
 import { signOut } from "../auth/authSetup";
 import { error } from "console";
 
@@ -23,7 +23,7 @@ async function loadAccessToken(): Promise<string | null> {
 }
 
 api.interceptors.request.use(
-  async (config: AxiosRequestConfig) => {
+  async (config: InternalAxiosRequestConfig) => {
     const token = await loadAccessToken();
 
     if (token) {

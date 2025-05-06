@@ -36,5 +36,5 @@ export default async function SignUpAction(data: signUpSchemaType) {
     throw new Error("Could not create a new user");
   }
 
-  return { sucess: true, newUser };
+  return { success: true, newUser };
 }

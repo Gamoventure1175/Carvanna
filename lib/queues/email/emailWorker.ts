@@ -1,8 +1,8 @@
 import { Job, Worker } from "bullmq";
-import { sendOtpEmail } from "../email/sendOtpEmail";
+import { sendOtpEmail } from "../../email/sendOtpEmail";
 import { parsedEnv } from "@/validation/custom/env";
 
-new Worker(
+export const emailOTPWorker = new Worker(
   "email-otp-queue",
   async (job: Job) => {
     const { to, username, otp } = job.data;
@@ -10,5 +10,5 @@ new Worker(
   },
   {
     connection: { url: parsedEnv.REDIS_URL },
-  },
+  }
 );

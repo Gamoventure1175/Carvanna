@@ -11,7 +11,7 @@ async function createRefreshToken(userId: UserIdType) {
     expiresIn: "7d",
   });
 
-  await prisma.session.create({
+  await prisma.userSession.create({
     data: {
       userId,
       sessionToken: refreshToken,

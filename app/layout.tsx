@@ -3,7 +3,7 @@ import "@/styles/globals.css";
 import { ThemeProviderContext } from "@/context/ThemeContext";
 import { CssBaseline } from "@mui/material";
 import NavBar from "@/components/UI/Navbar";
-import { SessionProvider } from "next-auth/react";
+import { SessionProvider } from "next-auth/react";  
 
 export const metadata: Metadata = {
   title: "Carvanna",
@@ -18,16 +18,16 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark ">
       <body>
-        <SessionProvider>
-          <ThemeProviderContext>
-            <CssBaseline />
-            <header>
-              <NavBar />
-            </header>
-            {children}
-            <footer></footer>
-          </ThemeProviderContext>
-        </SessionProvider>
+          <SessionProvider>
+            <ThemeProviderContext>
+              <CssBaseline />
+              <header>
+                <NavBar />
+              </header>
+              {children}
+              <footer></footer>
+            </ThemeProviderContext>
+          </SessionProvider>
       </body>
     </html>
   );

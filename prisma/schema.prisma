@@ -1,5 +1,5 @@
 datasource db {
-  provider = "mongodb"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -15,7 +15,7 @@ generator zod {
 //User Schema 
 model User {
   //Essential info
-  id            String    @id @default(auto()) @map("_id") @db.ObjectId
+  id            Int       @id @default(autoincrement())
   email         String    @unique
   emailVerified DateTime?
   password      String?
@@ -41,7 +41,7 @@ model User {
   //Many-to-many relationship via UserAccount
   Account  Account[]
   accounts UserAccount[]
-  Session  Session[]
+  Session  UserSession[]
 }
 
 //Defining roles
@@ -50,17 +50,22 @@ enum UserRole {
   ADMIN
 }
 
+enum ReminderType {
+  SERVICE
+  PUC 
+  INSURANCE
+}
+
 //Car Schema
 model Car {
-  id           String   @id @default(auto()) @map("_id") @db.ObjectId
-  ownerId      String   @db.ObjectId
+  id           Int      @id @default(autoincrement())
+  ownerId      Int
   owner        User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   brand        String
   model        String
   year         Int
   mileage      Int?
   color        String?
-  carImageUrl  String?
   licensePlate String   @unique
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
@@ -74,7 +79,7 @@ model Car {
 
 //ServiceType Schema
 model ServiceType {
-  id           String @id @default(auto()) @map("_id") @db.ObjectId
+  id           Int    @id @default(autoincrement())
   name         String @unique // e.g., "OIL_CHANGE"
   label        String // e.g., "Oil Change"
   intervalKm   Int? // e.g., every 5000 km
@@ -85,10 +90,10 @@ model ServiceType {
 
 //ServiceLog Schema
 model ServiceLog {
-  id            String      @id @default(auto()) @map("_id") @db.ObjectId
-  carId         String      @db.ObjectId
+  id            Int         @id @default(autoincrement())
+  carId         Int
   car           Car         @relation(fields: [carId], references: [id], onDelete: Cascade)
-  serviceTypeId String      @db.ObjectId
+  serviceTypeId Int
   serviceType   ServiceType @relation(fields: [serviceTypeId], references: [id])
   serviceDate   DateTime
   mileageAtTime Int?
@@ -99,19 +104,19 @@ model ServiceLog {
 
 //Account schema
 model Account {
-  id                String        @id @default(auto()) @map("_id") @db.ObjectId
+  id                Int           @id @default(autoincrement())
   user              User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId            String        @db.ObjectId
+  userId            Int
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String?       @db.String
-  access_token      String?       @db.String
+  refresh_token     String?
+  access_token      String?
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String?       @db.String
-  session_state     String?       @db.String
+  id_token          String?
+  session_state     String?
   createdAt         DateTime      @default(now())
   updatedAt         DateTime      @updatedAt
   //Many-to-many relationship via UserAccount
@@ -122,18 +127,18 @@ model Account {
 
 //UserAccount schema
 model UserAccount {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  userId    String   @db.ObjectId
-  accountId String   @db.ObjectId
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  accountId Int
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   account   Account  @relation(fields: [accountId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
 }
 
 //Session schema
-model Session {
-  id           String   @id @default(auto()) @map("_id") @db.ObjectId
-  userId       String   @db.ObjectId
+model UserSession {
+  id           Int      @id @default(autoincrement())
+  userId       Int
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   expires      DateTime
   sessionToken String   @unique
@@ -146,12 +151,12 @@ model Session {
 
 //Reminder job schema for bullMQ
 model ReminderJob {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  userId      String   @db.ObjectId
+  id          Int      @id @default(autoincrement())
+  userId      Int
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  carId       String   @db.ObjectId
+  carId       Int
   car         Car      @relation(fields: [carId], references: [id], onDelete: Cascade)
-  type        String // e.g., "SERVICE", "PUC", "INSURANCE"
+  type        ReminderType // e.g., "SERVICE", "PUC", "INSURANCE"
   referenceId String // Points to related serviceLog/PUC/insurance
   scheduledAt DateTime
   sent        Boolean  @default(false)
@@ -161,8 +166,8 @@ model ReminderJob {
 
 //Insurance Schema
 model Insurance {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  carId       String   @db.ObjectId
+  id          Int      @id @default(autoincrement())
+  carId       Int
   car         Car      @relation(fields: [carId], references: [id], onDelete: Cascade)
   provider    String
   policyNo    String
@@ -176,8 +181,8 @@ model Insurance {
 
 //PUC Schema 
 model PUCCheck {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  carId       String   @db.ObjectId
+  id          Int      @id @default(autoincrement())
+  carId       Int
   car         Car      @relation(fields: [carId], references: [id], onDelete: Cascade)
   checkedAt   DateTime
   validTill   DateTime

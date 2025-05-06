@@ -188,7 +188,7 @@ export const authOptions: NextAuthConfig = {
     },
     async session({ session, token }) {
       session.user = {
-        id: token.id as string,
+        id: token.id as number,
         email: token.email as string,
         username: token.username as string,
         role: token.role as string,

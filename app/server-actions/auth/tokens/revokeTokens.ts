@@ -1,7 +1,7 @@
 import prisma from "@/lib/prisma/prisma";
 
 export async function revokeRefreshToken(refreshToken: string) {
-  await prisma.session.delete({
+  await prisma.userSession.delete({
     where: { sessionToken: refreshToken },
   });
 }

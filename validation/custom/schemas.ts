@@ -2,6 +2,7 @@ import { z } from "zod";
 import { CarSchema, UserSchema } from "../generated";
 
 export const ExtendedUserSchema = UserSchema.extend({
+  id: z.coerce.number(),
   email: z
     .string()
     .nonempty({ message: "Email cannot be nonempty" })
@@ -93,7 +94,7 @@ export const ExtendedCarSchema = CarSchema.extend({
     .nonempty({ message: "Model name cannot be empty" })
     .min(1, "Model name must be at least 1 character long")
     .max(50, "Model name must be at most 50 characters long"),
-  year: z
+  year: z.coerce
     .number()
     .int("Year must be an integer")
     .nonnegative()
@@ -108,16 +109,12 @@ export const ExtendedCarSchema = CarSchema.extend({
       /^[A-Za-z0-9\s-]+$/,
       "License plate must only contain alphanumeric characters, spaces, or dashes",
     ),
-  carImageUrl: z
-    .string()
-    .nonempty({ message: "Car image url cannot be empty" })
-    .url("Car image URL must be a valid URL"),
   color: z
     .string()
     .nonempty({ message: "Color of the car cannot be empty" })
     .regex(/^[A-Za-z\s]+$/, "Color must only contain letters and spaces")
     .max(20, "Color name must be at most 20 characters long"),
-  mileage: z
+  mileage: z.coerce
     .number()
     .int("Mileage must be an integer")
     .min(0, "Mileage cannot be negative"),

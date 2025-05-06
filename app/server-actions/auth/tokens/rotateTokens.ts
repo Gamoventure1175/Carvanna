@@ -3,7 +3,7 @@ import { parsedEnv } from "@/validation/custom/env";
 import { sign } from "jsonwebtoken";
 
 export async function rotateTokens(refreshToken: string) {
-  const session = await prisma.session.findUnique({
+  const session = await prisma.userSession.findUnique({
     where: { sessionToken: refreshToken },
   });
 
@@ -22,7 +22,7 @@ export async function rotateTokens(refreshToken: string) {
     expiresIn: "7d",
   });
 
-  await prisma.session.update({
+  await prisma.userSession.update({
     where: { sessionToken: refreshToken },
     data: {
       sessionToken: newRefreshToken,

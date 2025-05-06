@@ -1,4 +1,4 @@
-import { addOtpJob } from "@/lib/queues/emailProducer";
+import { addOtpJob } from "@/lib/queues/email/emailProducer";
 import { generateAndStoreOtp } from "@/lib/redis/otp";
 import validateWithSchema from "@/utility/zod/validateWithSchema";
 import { signUpSchema } from "@/validation/custom/signUp";
@@ -10,7 +10,7 @@ export async function POST(req: NextRequest) {
   const validatedEmail = validateWithSchema(signUpSchema.shape.email, email);
   const validatedUsername = validateWithSchema(
     signUpSchema.shape.username,
-    username,
+    username
   );
 
   const otp = await generateAndStoreOtp(validatedEmail);
