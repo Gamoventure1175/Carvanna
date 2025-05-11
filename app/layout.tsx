@@ -3,7 +3,9 @@ import "@/styles/globals.css";
 import { ThemeProviderContext } from "@/context/ThemeContext";
 import { CssBaseline } from "@mui/material";
 import NavBar from "@/components/UI/Navbar";
-import { SessionProvider } from "next-auth/react";  
+import { SessionProvider } from "next-auth/react";
+import Script from "next/script";
+import { ReactQueryProvider } from "@/lib/react-query/ReactQueryProvider";
 
 export const metadata: Metadata = {
   title: "Carvanna",
@@ -18,16 +20,22 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark ">
       <body>
-          <SessionProvider>
-            <ThemeProviderContext>
+        <Script
+          src="https://unpkg.com/css-doodle@0.34.7/css-doodle.min.js"
+          strategy="beforeInteractive"
+        />
+        <SessionProvider>
+          <ThemeProviderContext>
+            <ReactQueryProvider>
               <CssBaseline />
               <header>
                 <NavBar />
               </header>
               {children}
               <footer></footer>
-            </ThemeProviderContext>
-          </SessionProvider>
+            </ReactQueryProvider>
+          </ThemeProviderContext>
+        </SessionProvider>
       </body>
     </html>
   );

@@ -1,14 +1,11 @@
-import { emailOTPWorker } from "@/lib/queues/email/emailWorker";;
+import { emailOTPWorker } from "@/lib/queues/email/emailWorker";
 import { serviceReminderWorker } from "@/lib/queues/service/serviceReminderWorker";
 
 // Optionally: graceful shutdown handling
 const shutdown = async () => {
   console.log("Shutting down workers...");
 
-  await Promise.all([
-    serviceReminderWorker.close(),
-    emailOTPWorker.close(),
-  ]);
+  await Promise.all([serviceReminderWorker.close(), emailOTPWorker.close()]);
 
   process.exit(0);
 };

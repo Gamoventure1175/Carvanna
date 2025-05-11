@@ -1,32 +1,18 @@
-import HeaderBanner from "@/components/UI/HeaderBanner";
-import { Box, Container } from "@mui/material";
+import { Box, Typography } from "@mui/material";
+import HeaderBannerDashboard from "@/components/UI/HeaderBannerCar";
+import MainBody from "@/components/UI/MainBody";
+import Services from "@/components/UI/Services";
 
 export default function Home() {
   return (
     <>
-      <Box component={"section"}>
-        <HeaderBanner />
+      <Box component={"section"} sx={{ position: "relative", zIndex: 1 }}>
+        <HeaderBannerDashboard />
       </Box>
       <main>
-        <Container>
-          <div>HI</div>
-          <div>HI</div>
-          <div>HI</div>
-          <div>HI</div>
-          <div>HI</div>
-          <div>HI</div>
-          <div>HI</div>
-          <div>HI</div>
-          <div>HI</div>
-          <div>HI</div>
-          <div>HI</div>
-          <div>HI</div>
-          <div>HI</div>
-          <div>HI</div>
-          <div>HI</div>
-          <div>HI</div>
-          <div>HI</div>
-        </Container>
+        <MainBody>
+          <Services />
+        </MainBody>
       </main>
     </>
   );

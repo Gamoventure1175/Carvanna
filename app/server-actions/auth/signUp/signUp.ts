@@ -1,7 +1,7 @@
 "use server";
 import prisma from "@/lib/prisma/prisma";
 import hashPassword from "@/utility/auth/hashPassword";
-import getUserByEmail from "@/utility/prisma/getUserByEmail";
+import getUserByEmail from "@/utility/user/getUserByEmail";
 import validateWithSchema from "@/utility/zod/validateWithSchema";
 import { signUpSchema, signUpSchemaType } from "@/validation/custom/signUp";
 
@@ -29,6 +29,7 @@ export default async function SignUpAction(data: signUpSchemaType) {
       profileImageUrl: null,
       phone: null,
       location: null,
+      emailVerified: new Date(),
     },
   });
 

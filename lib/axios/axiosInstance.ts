@@ -1,8 +1,6 @@
 import axios from "axios";
 import type { InternalAxiosRequestConfig } from "axios";
-import { signOut } from "../auth/authSetup";
-import { error } from "console";
-
+import { signOut } from "next-auth/react";
 const api = axios.create({
   baseURL: "/api",
 });

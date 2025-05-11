@@ -16,14 +16,12 @@ import { useState } from "react";
 import { Controller, useForm, SubmitHandler } from "react-hook-form";
 import addCarAction from "@/app/server-actions/car/addCar";
 import { useCarForm } from "@/context/CarFormContext";
-import {useRouter} from 'next/navigation'
-
-
+import { useRouter } from "next/navigation";
 
 export default function CarFormModal() {
   const { data } = useSession();
-  const {isCarFormOpen, setIsCarFormOpen} = useCarForm()
-  const {push} = useRouter()
+  const { isCarFormOpen, setIsCarFormOpen } = useCarForm();
+  const { push } = useRouter();
 
   const {
     control,
@@ -47,15 +45,20 @@ export default function CarFormModal() {
     try {
       await addCarAction(formData);
       reset();
-      setIsCarFormOpen(false)   
-      push('/dashboard')
+      setIsCarFormOpen(false);
+      push("/dashboard");
     } catch (error) {
       console.log(error);
     }
   };
 
   return (
-    <Dialog open={isCarFormOpen} onClose={() => setIsCarFormOpen(false)} maxWidth="sm" fullWidth>
+    <Dialog
+      open={isCarFormOpen}
+      onClose={() => setIsCarFormOpen(false)}
+      maxWidth="sm"
+      fullWidth
+    >
       <DialogTitle>Register your car with an image!</DialogTitle>
       <form onSubmit={handleSubmit(onSubmit)}>
         <DialogContent dividers>

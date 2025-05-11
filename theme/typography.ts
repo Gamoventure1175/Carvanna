@@ -1,5 +1,7 @@
 import { Space_Mono, Work_Sans, Playwrite_IT_Trad } from "next/font/google";
 import { createBreakpoints } from "@mui/system";
+import localFont from "next/font/local";
+import { brandColor2, secondary } from "./colors";
 
 const spaceMono = Space_Mono({
   subsets: ["latin"],
@@ -11,9 +13,10 @@ const workSans = Work_Sans({
   weight: ["300", "500", "700", "900"],
   style: ["italic", "normal"],
 });
-const playWriteItTrad = Playwrite_IT_Trad({
-  weight: ["100", "200", "200", "300", "400"],
-  style: ["normal"],
+const playWriteItTrad = localFont({
+  src: "../public/fonts/PlaywriteITTrad-VariableFont_wght.ttf",
+  weight: "400",
+  style: "normal",
 });
 
 const breakpoints = createBreakpoints({});
@@ -24,7 +27,6 @@ const fontFamilies = {
   mono: spaceMono?.style.fontFamily || "monospace",
 };
 
-//Defining a utility function that returns resposive font sizes
 export const responsiveFontSizes = (sizes: {
   xs: number;
   sm: number;
@@ -42,7 +44,7 @@ export const responsiveFontSizes = (sizes: {
 export const typography = {
   fontFamily: fontFamilies.primary,
   h1: {
-    ...responsiveFontSizes({ xs: 38, sm: 48, md: 52, lg: 62, xl: 72 }),
+    ...responsiveFontSizes({ xs: 48, sm: 58, md: 62, lg: 72, xl: 82 }),
     fontFamily: fontFamilies.accent,
     fontWeight: 400,
     lineHeight: 78 / 70,
@@ -78,6 +80,7 @@ export const typography = {
   body2: {
     fontWeight: 400,
     fontSize: 14,
+    color: brandColor2[200],
   },
   caption: {
     fontWeight: 400,

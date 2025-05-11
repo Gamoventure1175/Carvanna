@@ -5,7 +5,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import prisma from "../prisma/prisma";
 import { ExtendedUserSchema } from "@/validation/custom/schemas";
 import bcrypt from "bcryptjs";
-import getUserByEmail from "@/utility/prisma/getUserByEmail";
+import getUserByEmail from "@/utility/user/getUserByEmail";
 import linkOAuth from "@/app/server-actions/auth/OAuth/linkOAuth";
 import { ZodError } from "zod-validation-error";
 import createOAuthAccount from "@/app/server-actions/auth/OAuth/createOAuthAccount";
@@ -84,6 +84,10 @@ export const authOptions: NextAuthConfig = {
         );
 
         if (!validPassword) throw new Error("Invalid username or password");
+        // return {
+        //   ...user,
+        //   id: String(user.id)
+        // }
         return user;
       },
     }),
@@ -188,7 +192,7 @@ export const authOptions: NextAuthConfig = {
     },
     async session({ session, token }) {
       session.user = {
-        id: token.id as number,
+        id: token.id,
         email: token.email as string,
         username: token.username as string,
         role: token.role as string,

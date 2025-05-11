@@ -1,5 +1,8 @@
-import { Theme } from "@mui/material/styles";
-export const ComponentOverrides = (mode: "light" | "dark") => ({
+import { Theme, Components } from "@mui/material/styles";
+
+export const ComponentOverrides = (
+  mode: "light" | "dark",
+): Components<Theme> => ({
   MuiContainer: {
     defaultProps: {
       maxWidth: false as const,
@@ -8,9 +11,16 @@ export const ComponentOverrides = (mode: "light" | "dark") => ({
   },
   MuiAppBar: {
     styleOverrides: {
-      root: ({ theme }: { theme: Theme }) => ({
+      root: ({ theme }) => ({
         backgroundImage: "none",
         backgroundColor: theme.palette.primary.main,
+      }),
+    },
+  },
+  MuiButton: {
+    styleOverrides: {
+      root: () => ({
+        // Optional: customize styles here
       }),
     },
   },

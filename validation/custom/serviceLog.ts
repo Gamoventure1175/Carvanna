@@ -1,10 +1,13 @@
 import { z } from "zod";
 
 export const serviceLogFormSchema = z.object({
-  carId: z.coerce.number().int().positive({
-    message: "Car ID is required",
-  }),
-  serviceTypeId: z.coerce.number().int().positive({
+  carId: z
+    .string({
+      message: "Car ID is required",
+    })
+    .nonempty({ message: "Car Id cannot be empty" })
+    .cuid({}),
+  serviceTypeId: z.number({
     message: "Service type is required",
   }),
   serviceDate: z.coerce.date().refine((date) => date <= new Date(), {

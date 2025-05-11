@@ -4,6 +4,7 @@ import {
 } from "@/validation/custom/schemas";
 import prisma from "@/lib/prisma/prisma";
 import validateWithSchema from "../zod/validateWithSchema";
+import { emailSchema } from "@/validation/custom/emailValidation";
 
 const userSelectFields = {
   id: true,
@@ -24,10 +25,8 @@ const userSelectFields = {
   location: true,
 };
 
-const EmailSchema = ExtendedUserSchema.shape.email; //Use z.shape when you want the zod validation only for a specific field
-
 export default async function getUserByEmail(email: unknown) {
-  const validatedEmail = validateWithSchema(EmailSchema, email); //Using the validation utility checking function
+  const validatedEmail = validateWithSchema(emailSchema, email);
 
   const user: ExtendedUserType | null = await prisma.user.findUnique({
     where: { email: validatedEmail },

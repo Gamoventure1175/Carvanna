@@ -10,7 +10,7 @@ export async function POST(req: NextRequest) {
   const validatedEmail = validateWithSchema(signUpSchema.shape.email, email);
   const validatedUsername = validateWithSchema(
     signUpSchema.shape.username,
-    username
+    username,
   );
 
   const otp = await generateAndStoreOtp(validatedEmail);

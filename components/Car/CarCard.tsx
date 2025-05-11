@@ -8,7 +8,6 @@ import {
   Paper,
   Typography,
   Button,
-  CardHeader,
   CardMedia,
 } from "@mui/material";
 import CarServiceLog from "./CarServiceLog";
@@ -22,8 +21,7 @@ export default function CarCard({
   id,
   licensePlate,
 }: ExtendedCarType) {
-
-  const { isServiceLogFormOpen, setIsServiceLogFormOpen } = useServiceLogForm()
+  const { isServiceLogFormOpen, setIsServiceLogFormOpen } = useServiceLogForm();
 
   return (
     <Paper elevation={4}>
@@ -38,7 +36,9 @@ export default function CarCard({
         <DirectionsCar sx={{ fontSize: 30 }} />
       </CardMedia>
       <CardActions>
-        <Button variant="text" onClick={() => setIsServiceLogFormOpen(true)}>Add a service</Button>
+        <Button variant="text" onClick={() => setIsServiceLogFormOpen(true)}>
+          Add a service
+        </Button>
       </CardActions>
       {isServiceLogFormOpen === true && (
         <CarServiceLog carId={id} brand={brand} model={model} />

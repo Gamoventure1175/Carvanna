@@ -2,7 +2,7 @@ import { z } from "zod";
 import { CarSchema, UserSchema } from "../generated";
 
 export const ExtendedUserSchema = UserSchema.extend({
-  id: z.coerce.number(),
+  id: z.string().nonempty({ message: "User ID cannot be empty" }).cuid(),
   email: z
     .string()
     .nonempty({ message: "Email cannot be nonempty" })
@@ -83,6 +83,7 @@ export const ExtendedUserSchema = UserSchema.extend({
 export type ExtendedUserType = z.infer<typeof ExtendedUserSchema>;
 
 export const ExtendedCarSchema = CarSchema.extend({
+  id: z.string().nonempty({ message: "User ID cannot be empty" }).cuid(),
   brand: z
     .string()
     .nonempty({ message: "Brand name cannot be empty" })

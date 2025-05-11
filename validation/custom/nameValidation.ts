@@ -1,4 +1,4 @@
-import { ExtendedUserSchema } from "@/validation/custom/schemas";
+import { ExtendedUserSchema } from "./schemas";
 import { z } from "zod";
 
 export const nameSchema = ExtendedUserSchema.shape.name;

@@ -1,4 +1,4 @@
-import { emailSchema } from "../zod/emailValidation";
+import { emailSchema } from "../../validation/custom/emailValidation";
 import validateWithSchema from "../zod/validateWithSchema";
 
 export default function getUsernameFromEmail(email: string): string {

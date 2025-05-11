@@ -1,16 +1,10 @@
 "use server";
-
-import { auth } from "@/lib/auth/authSetup";
 import prisma from "@/lib/prisma/prisma";
 
-export async function getUserCars() {
-  const session = await auth();
-
-  if (!session?.user?.id) throw new Error("Unauthorised");
-
+export async function getUserCars(ownerId: string) {
   const cars = await prisma.car.findMany({
     where: {
-      ownerId: session.user.id,
+      ownerId: ownerId,
     },
     orderBy: {
       createdAt: "desc",

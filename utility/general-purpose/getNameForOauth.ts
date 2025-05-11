@@ -1,6 +1,6 @@
 import { Profile } from "next-auth";
 import validateWithSchema from "../zod/validateWithSchema";
-import { nameSchema } from "../zod/nameValidation";
+import { nameSchema } from "../../validation/custom/nameValidation";
 
 export default function getNameForOauth(profile: Profile) {
   if (!profile.given_name || !profile.family_name)

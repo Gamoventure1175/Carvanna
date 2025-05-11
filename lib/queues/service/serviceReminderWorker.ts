@@ -6,7 +6,8 @@ import { Job, Worker } from "bullmq";
 export const serviceReminderWorker = new Worker(
   "service-reminder-queue",
   async (job: Job) => {
-    const { userId, carId, serviceLogId, serviceTypeId, dueDate } = job.data;
+    const { userId, carId, serviceLogId, serviceTypeId, dueDate, notes } =
+      job.data;
 
     const [user, car, serviceType, reminderJob] = await Promise.all([
       prisma.user.findUnique({ where: { id: userId } }),
@@ -21,16 +22,24 @@ export const serviceReminderWorker = new Worker(
     ]);
 
     if (!user || !user.email || !user.username || !car || !serviceType) {
-     if (process.env.NODE_ENV !== "production") console.error("Missing data in reminder job:", { user, car, serviceType });
+      if (process.env.NODE_ENV !== "production")
+        console.error("Missing data in reminder job:", {
+          user,
+          car,
+          serviceType,
+        });
       throw new Error("Incomplete job data");
     }
 
     if (!reminderJob) {
-      throw new Error("ReminderJob not found for serviceLogId: " + serviceLogId);
+      throw new Error(
+        "ReminderJob not found for serviceLogId: " + serviceLogId,
+      );
     }
 
     if (reminderJob.sent) {
-      if (process.env.NODE_ENV !== "production") console.log(`Reminder email already sent for job ID ${reminderJob.id}`);
+      if (process.env.NODE_ENV !== "production")
+        console.log(`Reminder email already sent for job ID ${reminderJob.id}`);
       return;
     }
 
@@ -41,6 +50,7 @@ export const serviceReminderWorker = new Worker(
         carName: `${car.brand} ${car.model}`,
         serviceName: serviceType.label,
         dueDate: new Date(dueDate),
+        notes: notes,
       });
 
       await prisma.reminderJob.update({
@@ -48,11 +58,15 @@ export const serviceReminderWorker = new Worker(
         data: { sent: true },
       });
 
-      if (process.env.NODE_ENV !== "production") console.log(`Successfully sent reminder email for job ID ${reminderJob.id}`);
+      if (process.env.NODE_ENV !== "production")
+        console.log(
+          `Successfully sent reminder email for job ID ${reminderJob.id}`,
+        );
     } catch (error) {
-    if (process.env.NODE_ENV !== "production") console.error("Failed to send reminder email:", error);
+      if (process.env.NODE_ENV !== "production")
+        console.error("Failed to send reminder email:", error);
       throw error;
     }
   },
-  { connection: { url: parsedEnv.REDIS_URL } }
+  { connection: { url: parsedEnv.REDIS_URL } },
 );

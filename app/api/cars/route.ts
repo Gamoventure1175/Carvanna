@@ -1,25 +1,25 @@
 import { NextRequest, NextResponse } from "next/server";
-import fetchWithRetries from "@/utility/data-fetch/fetchWithRetries";
+import { auth } from "@/lib/auth/authSetup";
+import { getUserCars } from "@/app/server-actions/car/getUserCars";
 
 export async function GET(req: NextRequest) {
   try {
-    const res = await fetch(`${process.env.CAR_API}/cars`, {
-      next: {
-        revalidate: 5,
-        tags: ["cars"],
-      },
-      cache: "force-cache",
-    });
-
-    if (!res.ok) {
-      return NextResponse.json(
-        { error: "Something went wrong", errorDetails: res.statusText },
-        { status: res.status },
-      );
+    const session = await auth();
+    if (!session) {
+      return NextResponse.json({ message: "Unauthorised" }, { status: 401 });
     }
 
-    const data = await res.json();
-    return NextResponse.json({ data }, { status: 200 });
+    const ownerId = session.user.id;
+
+    const data = await getUserCars(ownerId);
+
+    if (data.length === 0)
+      return NextResponse.json(
+        { message: "Could not get the cars" },
+        { status: 404 },
+      );
+
+    return NextResponse.json(data);
   } catch (error) {
     console.log(error);
     return NextResponse.json(

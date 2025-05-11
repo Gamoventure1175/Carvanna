@@ -3,14 +3,16 @@
 import { useRouter } from "next/navigation";
 import { Typography, AppBar } from "@mui/material";
 import { useState, useEffect } from "react";
-import ThemeToggleButton from "./ThemeToggleButton";
-import User from "./User";
+import DashboardButton from "./Dashboard";
+import { useSession } from "next-auth/react";
+import SignUpButton from "./SignUpButton";
 
 export default function NavBar() {
   const router = useRouter();
   const [isVisible, setIsVisible] = useState(true);
   const [prevScroll, setPrevScroll] = useState(0);
   const [isAtTheTop, setIsAtTheTop] = useState(true);
+  const { data: session } = useSession();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -42,10 +44,10 @@ export default function NavBar() {
         left: "50%",
         transform: isVisible ? "translate(-50%,0)" : "translate(-50%,-100%)",
         transition:
-          "max-width .4s ease-in-out, transform .4s ease-in-out, box-shadow .4s ease-in-out, margin-top .4s ease-in-out ",
+          "max-width .4s ease-in-out, transform .4s ease-in-out, box-shadow .4s ease-in-out, margin-top .4s ease-in-out, border-radius .2s ease-out ",
         maxWidth: isAtTheTop ? "100%" : `calc(100% - 92px)`,
         marginTop: isAtTheTop ? 0 : "8px",
-        borderRadius: isAtTheTop ? 0 : 10,
+        borderRadius: isAtTheTop ? 0 : 12,
         boxShadow: isAtTheTop ? "none" : "",
         backgroundColor: theme.palette.primary.main,
       })}
@@ -57,7 +59,8 @@ export default function NavBar() {
       >
         Carvana
       </Typography>
-      <User />
+      {session && session.user && <DashboardButton />}
+      {!session && <SignUpButton />}
     </AppBar>
   );
 }

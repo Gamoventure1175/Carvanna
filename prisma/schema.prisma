@@ -12,39 +12,6 @@ generator zod {
   output   = "../validation/generated/"
 }
 
-//User Schema 
-model User {
-  //Essential info
-  id            Int       @id @default(autoincrement())
-  email         String    @unique
-  emailVerified DateTime?
-  password      String?
-  username      String    @unique
-  isVerified    Boolean   @default(false)
-  role          UserRole  @default(USER)
-  oauthOnly     Boolean   @default(false)
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  onBoarded     Boolean   @default(false)
-
-  //Personal info
-  name            String?
-  phone           String?
-  driversLicense  String? @unique
-  profileImageUrl String?
-  location        String?
-
-  //Relationships
-  cars      Car[]
-  reminders ReminderJob[]
-
-  //Many-to-many relationship via UserAccount
-  Account  Account[]
-  accounts UserAccount[]
-  Session  UserSession[]
-}
-
-//Defining roles
 enum UserRole {
   USER
   ADMIN
@@ -52,61 +19,87 @@ enum UserRole {
 
 enum ReminderType {
   SERVICE
-  PUC 
+  PUC
   INSURANCE
 }
 
-//Car Schema
+// User Schema
+model User {
+  id              String         @id @default(cuid())
+  email           String         @unique
+  emailVerified   DateTime?
+  password        String?
+  username        String         @unique
+  isVerified      Boolean        @default(false)
+  role            UserRole       @default(USER)
+  oauthOnly       Boolean        @default(false)
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  onBoarded       Boolean        @default(false)
+
+  name            String?
+  phone           String?
+  driversLicense  String?        @unique
+  profileImageUrl String?
+  location        String?
+
+  cars            Car[]
+  reminders       ReminderJob[]
+  Account         Account[]
+  accounts        UserAccount[]
+  Session         UserSession[]
+}
+
+// Car Schema
 model Car {
-  id           Int      @id @default(autoincrement())
-  ownerId      Int
-  owner        User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  id           String       @id @default(cuid())
+  ownerId      String
+  owner        User         @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   brand        String
   model        String
   year         Int
   mileage      Int?
   color        String?
-  licensePlate String   @unique
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  licensePlate String       @unique
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
 
-  //Relations related to the car services
-  serviceLogs ServiceLog[]
-  insurance   Insurance[]
-  pucChecks   PUCCheck[]
-  ReminderJob ReminderJob[]
+  serviceLogs  ServiceLog[]
+  insurance    Insurance[]
+  pucChecks    PUCCheck[]
+  ReminderJob  ReminderJob[]
 }
 
-//ServiceType Schema
+// ServiceType Schema (Still uses Int since it's a static reference list)
 model ServiceType {
-  id           Int    @id @default(autoincrement())
-  name         String @unique // e.g., "OIL_CHANGE"
-  label        String // e.g., "Oil Change"
-  intervalKm   Int? // e.g., every 5000 km
-  intervalDays Int? // e.g., every 180 days
+  id           Int          @id @default(autoincrement())
+  name         String       @unique
+  label        String
+  intervalKm   Int?
+  intervalDays Int?
 
-  serviceLogs ServiceLog[]
+  serviceLogs  ServiceLog[]
 }
 
-//ServiceLog Schema
+// ServiceLog Schema
 model ServiceLog {
-  id            Int         @id @default(autoincrement())
-  carId         Int
-  car           Car         @relation(fields: [carId], references: [id], onDelete: Cascade)
+  id            String       @id @default(cuid())
+  carId         String
+  car           Car          @relation(fields: [carId], references: [id], onDelete: Cascade)
   serviceTypeId Int
-  serviceType   ServiceType @relation(fields: [serviceTypeId], references: [id])
+  serviceType   ServiceType  @relation(fields: [serviceTypeId], references: [id])
   serviceDate   DateTime
   mileageAtTime Int?
   notes         String?
 
-  createdAt DateTime @default(now())
+  createdAt     DateTime     @default(now())
 }
 
-//Account schema
+// Account Schema
 model Account {
-  id                Int           @id @default(autoincrement())
+  id                String        @id @default(cuid())
+  userId            String
   user              User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId            Int
   type              String
   provider          String
   providerAccountId String
@@ -119,55 +112,56 @@ model Account {
   session_state     String?
   createdAt         DateTime      @default(now())
   updatedAt         DateTime      @updatedAt
-  //Many-to-many relationship via UserAccount
+
   userAccounts      UserAccount[]
 
   @@unique([provider, providerAccountId])
 }
 
-//UserAccount schema
+// UserAccount Schema
 model UserAccount {
-  id        Int      @id @default(autoincrement())
-  userId    Int
-  accountId Int
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  account   Account  @relation(fields: [accountId], references: [id], onDelete: Cascade)
-  createdAt DateTime @default(now())
+  id        String    @id @default(cuid())
+  userId    String
+  accountId String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  account   Account   @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  createdAt DateTime  @default(now())
 }
 
-//Session schema
+// Session Schema
 model UserSession {
-  id           Int      @id @default(autoincrement())
-  userId       Int
+  id           String   @id @default(cuid())
+  userId       String
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   expires      DateTime
   sessionToken String   @unique
   deviceInfo   String?
   ipAddress    String?
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 
-//Reminder job schema for bullMQ
+// ReminderJob Schema
 model ReminderJob {
-  id          Int      @id @default(autoincrement())
-  userId      Int
-  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  carId       Int
-  car         Car      @relation(fields: [carId], references: [id], onDelete: Cascade)
-  type        ReminderType // e.g., "SERVICE", "PUC", "INSURANCE"
-  referenceId String // Points to related serviceLog/PUC/insurance
+  id          String       @id @default(cuid())
+  userId      String
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  carId       String
+  car         Car          @relation(fields: [carId], references: [id], onDelete: Cascade)
+  type        ReminderType
+  referenceId String
+  notes       String?
   scheduledAt DateTime
-  sent        Boolean  @default(false)
+  sent        Boolean      @default(false)
 
-  createdAt DateTime @default(now())
+  createdAt   DateTime     @default(now())
 }
 
-//Insurance Schema
+// Insurance Schema
 model Insurance {
-  id          Int      @id @default(autoincrement())
-  carId       Int
+  id          String   @id @default(cuid())
+  carId       String
   car         Car      @relation(fields: [carId], references: [id], onDelete: Cascade)
   provider    String
   policyNo    String
@@ -176,17 +170,17 @@ model Insurance {
   amount      Float?
   documentUrl String?
 
-  createdAt DateTime @default(now())
+  createdAt   DateTime @default(now())
 }
 
-//PUC Schema 
+// PUCCheck Schema
 model PUCCheck {
-  id          Int      @id @default(autoincrement())
-  carId       Int
+  id          String   @id @default(cuid())
+  carId       String
   car         Car      @relation(fields: [carId], references: [id], onDelete: Cascade)
   checkedAt   DateTime
   validTill   DateTime
   documentUrl String?
 
-  createdAt DateTime @default(now())
+  createdAt   DateTime @default(now())
 }

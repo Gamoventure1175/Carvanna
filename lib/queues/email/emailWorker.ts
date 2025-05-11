@@ -10,5 +10,5 @@ export const emailOTPWorker = new Worker(
   },
   {
     connection: { url: parsedEnv.REDIS_URL },
-  }
+  },
 );

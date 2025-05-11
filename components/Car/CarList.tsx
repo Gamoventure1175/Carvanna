@@ -1,9 +1,6 @@
 "use client";
 
-import {
-  ExtendedCarSchema,
-  ExtendedCarType,
-} from "@/validation/custom/schemas";
+import { ExtendedCarType } from "@/validation/custom/schemas";
 import { Box } from "@mui/material";
 import CarCard from "./CarCard";
 

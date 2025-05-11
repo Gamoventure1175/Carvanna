@@ -14,9 +14,9 @@ const getDesignTokens = (mode: "light" | "dark"): ThemeOptions => ({
   palette: {
     mode,
     primary: {
-      light: brandColor1[100],
-      main: brandColor1[200],
-      dark: brandColor1[300],
+      light: brandColor1[600],
+      main: brandColor1[700],
+      dark: brandColor1[800],
       contrastText: mode === "dark" ? brandColor2[50] : secondary[700],
       ...(mode === "dark" && {
         light: secondary[500],
@@ -25,8 +25,8 @@ const getDesignTokens = (mode: "light" | "dark"): ThemeOptions => ({
       }),
     },
     secondary: {
-      light: secondary[300],
-      main: secondary[400],
+      light: secondary[700],
+      main: secondary[800],
       dark: secondary[900],
     },
     error: {

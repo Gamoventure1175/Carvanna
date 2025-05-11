@@ -6,12 +6,14 @@ export async function createReminderJob({
   serviceLogId,
   serviceTypeId,
   dueDate,
+  notes,
 }: {
-  userId: number;
-  carId: number;
-  serviceLogId: number;
+  userId: string;
+  carId: string;
+  serviceLogId: string;
   serviceTypeId: number;
   dueDate: Date;
+  notes: string;
 }) {
   await serviceReminderQueue.add(
     "send-service-reminder-email",
@@ -20,6 +22,7 @@ export async function createReminderJob({
       carId,
       serviceLogId,
       serviceTypeId,
+      notes,
     },
     {
       delay: dueDate.getTime() - Date.now(),
@@ -27,6 +30,6 @@ export async function createReminderJob({
       removeOnComplete: true,
       attempts: 3,
       backoff: { type: "exponential", delay: 1000 },
-    }
+    },
   );
 }
