@@ -1,9 +1,9 @@
 import imagekit from "@/lib/imagekit";
 import validateWithSchema from "@/utility/zod/validateWithSchema";
 import { carImageApiSchema } from "@/validation/custom/carImage";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
     const data = await req.json();
     const validatedData = validateWithSchema(carImageApiSchema, data);

@@ -1,7 +1,7 @@
 import { Theme, Components } from "@mui/material/styles";
 
 export const ComponentOverrides = (
-  mode: "light" | "dark",
+  mode: "light" | "dark"
 ): Components<Theme> => ({
   MuiContainer: {
     defaultProps: {
@@ -17,11 +17,5 @@ export const ComponentOverrides = (
       }),
     },
   },
-  MuiButton: {
-    styleOverrides: {
-      root: () => ({
-        // Optional: customize styles here
-      }),
-    },
-  },
+
 });

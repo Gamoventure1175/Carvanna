@@ -1,6 +1,7 @@
-import prisma from "@/lib/prisma/prisma";
+import {prisma} from "@/lib/prisma/prisma";
 import { parsedEnv } from "@/validation/custom/env";
 import { sign } from "jsonwebtoken";
+
 
 export async function rotateTokens(refreshToken: string) {
   const session = await prisma.userSession.findUnique({

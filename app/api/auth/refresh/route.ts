@@ -8,17 +8,24 @@ export async function PUT(req: NextRequest) {
     if (!refreshToken) {
       return NextResponse.json(
         { error: "Invalid refresh token" },
-        { status: 401 },
+        { status: 401 }
       );
     }
 
-    const newTokens = await rotateTokens(refreshToken);
+    let newTokens;
+    try {
+      newTokens = await rotateTokens(refreshToken);
+    } catch (tokenError) {
+      console.error("Error rotating tokens:", tokenError);
+      return NextResponse.json({ error: "Token rotation failed" }, { status: 500 });
+    }
 
-    return NextResponse.json({ newTokens }, { status: 200 });
+    return NextResponse.json(newTokens);
   } catch (error) {
+    console.error("Handler error:", error);
     return NextResponse.json(
       { error: "Invalid request body" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

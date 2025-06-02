@@ -1,5 +1,5 @@
 import { sendReminderEmail } from "@/lib/email/sendReminderEmail";
-import prisma from "@/lib/prisma/prisma";
+import {prisma} from "@/lib/prisma/prisma";
 import { parsedEnv } from "@/validation/custom/env";
 import { Job, Worker } from "bullmq";
 

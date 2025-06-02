@@ -1,6 +1,6 @@
 "use server";
 
-import prisma from "@/lib/prisma/prisma";
+import {prisma} from "@/lib/prisma/prisma";
 import getUsernameFromEmail from "@/utility/general-purpose/getUsernameFromEmail";
 import { Account, Profile } from "next-auth";
 import linkOAuth from "./linkOAuth";

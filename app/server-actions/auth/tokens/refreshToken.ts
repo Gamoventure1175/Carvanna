@@ -1,4 +1,4 @@
-import prisma from "@/lib/prisma/prisma";
+import {prisma} from "@/lib/prisma/prisma";
 import { sign } from "jsonwebtoken";
 import { UserSchema } from "@/validation/generated";
 import { z } from "zod";

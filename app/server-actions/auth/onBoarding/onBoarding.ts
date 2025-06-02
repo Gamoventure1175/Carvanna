@@ -1,7 +1,7 @@
 "use server";
 
 import { auth } from "@/lib/auth/authSetup";
-import prisma from "@/lib/prisma/prisma";
+import {prisma} from "@/lib/prisma/prisma";
 import hashPassword from "@/utility/auth/hashPassword";
 import validateWithSchema from "@/utility/zod/validateWithSchema";
 import {

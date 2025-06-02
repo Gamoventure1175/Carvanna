@@ -5,6 +5,7 @@ datasource db {
 
 generator client {
   provider = "prisma-client-js"
+  // output = "/node_modules/.prisma/client"
 }
 
 generator zod {
@@ -25,81 +26,81 @@ enum ReminderType {
 
 // User Schema
 model User {
-  id              String         @id @default(cuid())
-  email           String         @unique
-  emailVerified   DateTime?
-  password        String?
-  username        String         @unique
-  isVerified      Boolean        @default(false)
-  role            UserRole       @default(USER)
-  oauthOnly       Boolean        @default(false)
-  createdAt       DateTime       @default(now())
-  updatedAt       DateTime       @updatedAt
-  onBoarded       Boolean        @default(false)
+  id            String    @id @default(cuid())
+  email         String    @unique
+  emailVerified DateTime?
+  password      String?
+  username      String    @unique
+  isVerified    Boolean   @default(false)
+  role          UserRole  @default(USER)
+  oauthOnly     Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  onBoarded     Boolean   @default(false)
 
   name            String?
   phone           String?
-  driversLicense  String?        @unique
+  driversLicense  String? @unique
   profileImageUrl String?
   location        String?
 
-  cars            Car[]
-  reminders       ReminderJob[]
-  Account         Account[]
-  accounts        UserAccount[]
-  Session         UserSession[]
+  cars      Car[]
+  reminders ReminderJob[]
+  Account   Account[]
+  accounts  UserAccount[]
+  Session   UserSession[]
 }
 
 // Car Schema
 model Car {
-  id           String       @id @default(cuid())
+  id           String   @id @default(cuid())
   ownerId      String
-  owner        User         @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  owner        User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   brand        String
   model        String
   year         Int
   mileage      Int?
   color        String?
-  licensePlate String       @unique
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt
+  licensePlate String   @unique
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
-  serviceLogs  ServiceLog[]
-  insurance    Insurance[]
-  pucChecks    PUCCheck[]
-  ReminderJob  ReminderJob[]
+  serviceLogs ServiceLog[]
+  insurance   Insurance[]
+  pucChecks   PUCCheck[]
+  ReminderJob ReminderJob[]
 }
 
-// ServiceType Schema (Still uses Int since it's a static reference list)
+// ServiceType Schema
 model ServiceType {
-  id           Int          @id @default(autoincrement())
-  name         String       @unique
+  id           Int    @id @default(autoincrement())
+  name         String @unique
   label        String
   intervalKm   Int?
   intervalDays Int?
 
-  serviceLogs  ServiceLog[]
+  serviceLogs ServiceLog[]
 }
 
 // ServiceLog Schema
 model ServiceLog {
-  id            String       @id @default(cuid())
+  id            String      @id @default(cuid())
   carId         String
-  car           Car          @relation(fields: [carId], references: [id], onDelete: Cascade)
+  car           Car         @relation(fields: [carId], references: [id], onDelete: Cascade)
   serviceTypeId Int
-  serviceType   ServiceType  @relation(fields: [serviceTypeId], references: [id])
+  serviceType   ServiceType @relation(fields: [serviceTypeId], references: [id])
   serviceDate   DateTime
   mileageAtTime Int?
   notes         String?
 
-  createdAt     DateTime     @default(now())
+  createdAt DateTime @default(now())
 }
 
 // Account Schema
 model Account {
-  id                String        @id @default(cuid())
+  id                String   @id @default(cuid())
   userId            String
-  user              User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   type              String
   provider          String
   providerAccountId String
@@ -110,22 +111,22 @@ model Account {
   scope             String?
   id_token          String?
   session_state     String?
-  createdAt         DateTime      @default(now())
-  updatedAt         DateTime      @updatedAt
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
 
-  userAccounts      UserAccount[]
+  userAccounts UserAccount[]
 
   @@unique([provider, providerAccountId])
 }
 
 // UserAccount Schema
 model UserAccount {
-  id        String    @id @default(cuid())
+  id        String   @id @default(cuid())
   userId    String
   accountId String
-  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  account   Account   @relation(fields: [accountId], references: [id], onDelete: Cascade)
-  createdAt DateTime  @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  account   Account  @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
 }
 
 // Session Schema
@@ -138,8 +139,8 @@ model UserSession {
   deviceInfo   String?
   ipAddress    String?
 
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 // ReminderJob Schema
@@ -155,7 +156,7 @@ model ReminderJob {
   scheduledAt DateTime
   sent        Boolean      @default(false)
 
-  createdAt   DateTime     @default(now())
+  createdAt DateTime @default(now())
 }
 
 // Insurance Schema
@@ -170,7 +171,7 @@ model Insurance {
   amount      Float?
   documentUrl String?
 
-  createdAt   DateTime @default(now())
+  createdAt DateTime @default(now())
 }
 
 // PUCCheck Schema
@@ -182,5 +183,5 @@ model PUCCheck {
   validTill   DateTime
   documentUrl String?
 
-  createdAt   DateTime @default(now())
+  createdAt DateTime @default(now())
 }

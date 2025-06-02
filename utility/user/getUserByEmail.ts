@@ -2,7 +2,7 @@ import {
   ExtendedUserSchema,
   ExtendedUserType,
 } from "@/validation/custom/schemas";
-import prisma from "@/lib/prisma/prisma";
+import {prisma} from "@/lib/prisma/prisma";
 import validateWithSchema from "../zod/validateWithSchema";
 import { emailSchema } from "@/validation/custom/emailValidation";
 

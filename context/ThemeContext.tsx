@@ -8,7 +8,7 @@ import {
   useEffect,
   useState,
 } from "react";
-import customTheme from "@/theme/customTheme";
+import customTheme from "@/theme/main/customTheme";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 
 const ThemeContext = createContext<ThemeContextProps | undefined>(undefined);

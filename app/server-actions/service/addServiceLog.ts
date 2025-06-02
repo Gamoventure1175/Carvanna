@@ -1,6 +1,6 @@
 "use server";
 
-import prisma from "@/lib/prisma/prisma";
+import {prisma} from "@/lib/prisma/prisma";
 import { createReminderJob } from "@/lib/queues/service/serviceReminderProducer";
 import { serviceLogFormSchemaType } from "@/validation/custom/serviceLog";
 

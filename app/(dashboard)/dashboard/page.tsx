@@ -5,7 +5,7 @@ import {
   ExtendedCarType,
 } from "@/validation/custom/schemas";
 import { Box, Button, Typography } from "@mui/material";
-import { Add } from "@mui/icons-material";
+import { Add, AddBox } from "@mui/icons-material";
 import CarList from "@/components/Car/CarList";
 import { CarContextProvider, useCarForm } from "@/context/CarFormContext";
 import { ServiceLogFormContextProvider } from "@/context/ServiceLogFormContext";
@@ -14,25 +14,27 @@ import { useQuery } from "@tanstack/react-query";
 import api from "@/lib/axios/axiosInstance";
 import validateWithSchema from "@/utility/zod/validateWithSchema";
 import { z } from "zod";
+import Loader from "@/components/UI/Loader";
 
 function DashBoardContent({ cars }: { cars: ExtendedCarType[] }) {
   const { isCarFormOpen, setIsCarFormOpen } = useCarForm();
 
+
   return (
-    <Box sx={{ maxWidth: "1200px", my: 20 }}>
-      {cars.length === 0 && (
+    <Box sx={{ maxWidth: "1200px", height: '100%', display: "flex", justifyContent: 'center', alignItems: 'center' }}>
+      {(!cars || cars.length === 0) && (
         <Box>
-          <Typography variant="h2">Add your car</Typography>
           <Button
             onClick={() => setIsCarFormOpen(true)}
-            sx={{ p: 3, fontSize: 50, display: "flex", alignItems: "center" }}
+            sx={{ p: 2, fontSize: 50, borderRadius: 6, gap: 3 }}
             variant="contained"
           >
-            <Add sx={{ fontSize: "inherit" }} />
+            <AddBox sx={{ fontSize: "inherit" }} />
+            <Typography variant='h4'>Add your car</Typography>
           </Button>
         </Box>
       )}
-      {cars.length !== 0 && (
+      {(cars && cars.length !== 0) && (
         <Box>
           <CarList carsDataArray={cars} />
           <Box>
@@ -69,14 +71,12 @@ export default function Dashboard() {
       return validatedCarArray;
     },
     staleTime: 1000 * 60 * 5,
-    refetchOnWindowFocus: true,
+    // refetchOnWindowFocus: true
   });
 
   if (isLoading && !cars) {
     return (
-      <Box sx={{ my: 20 }}>
-        <Typography variant="h2">Your cars are loading...</Typography>
-      </Box>
+      <Loader />
     );
   }
 

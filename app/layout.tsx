@@ -17,6 +17,7 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
   return (
     <html lang="en" className="dark ">
       <body>
@@ -28,9 +29,6 @@ export default function RootLayout({
           <ThemeProviderContext>
             <ReactQueryProvider>
               <CssBaseline />
-              <header>
-                <NavBar />
-              </header>
               {children}
               <footer></footer>
             </ReactQueryProvider>

@@ -1,6 +1,7 @@
 import axios from "axios";
 import type { InternalAxiosRequestConfig } from "axios";
 import { signOut } from "next-auth/react";
+
 const api = axios.create({
   baseURL: "/api",
 });
@@ -25,15 +26,12 @@ api.interceptors.request.use(
     const token = await loadAccessToken();
 
     if (token) {
-      config.headers = {
-        ...config.headers,
-        Authorization: `Bearer ${token}`,
-      };
+      config.headers.set("Authorisation", `Bearer ${token}`);
     }
 
     return config;
   },
-  (error) => Promise.reject(error),
+  (error) => Promise.reject(error)
 );
 
 api.interceptors.response.use(
@@ -56,6 +54,6 @@ api.interceptors.response.use(
     }
 
     return Promise.reject(error);
-  },
+  }
 );
 export default api;

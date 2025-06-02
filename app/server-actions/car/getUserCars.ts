@@ -1,5 +1,5 @@
 "use server";
-import prisma from "@/lib/prisma/prisma";
+import {prisma} from "@/lib/prisma/prisma";
 
 export async function getUserCars(ownerId: string) {
   const cars = await prisma.car.findMany({

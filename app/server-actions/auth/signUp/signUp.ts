@@ -1,5 +1,5 @@
 "use server";
-import prisma from "@/lib/prisma/prisma";
+import {prisma} from "@/lib/prisma/prisma";
 import hashPassword from "@/utility/auth/hashPassword";
 import getUserByEmail from "@/utility/user/getUserByEmail";
 import validateWithSchema from "@/utility/zod/validateWithSchema";

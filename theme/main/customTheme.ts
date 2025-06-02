@@ -1,4 +1,4 @@
-import { typography } from "./typography";
+import {typography} from '../typography'
 import { alpha, createTheme, ThemeOptions } from "@mui/material/styles";
 import {
   blackAccent,
@@ -7,7 +7,7 @@ import {
   secondary,
   errorAccent,
   successAccent,
-} from "./colors";
+} from "../colors";
 import { ComponentOverrides } from "./components";
 
 const getDesignTokens = (mode: "light" | "dark"): ThemeOptions => ({

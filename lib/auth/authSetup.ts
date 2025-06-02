@@ -2,7 +2,7 @@ import NextAuth, { NextAuthConfig } from "next-auth";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
-import prisma from "../prisma/prisma";
+import { prisma } from "../prisma/prisma";
 import { ExtendedUserSchema } from "@/validation/custom/schemas";
 import bcrypt from "bcryptjs";
 import getUserByEmail from "@/utility/user/getUserByEmail";
@@ -23,8 +23,14 @@ export const AuthCredentials = ExtendedUserSchema.pick({
 });
 //can be used later on when entering user credentials in the frontend
 
+//lazy loading
+function getPrismaAdapter(): Adapter {
+  const { prisma } = require("../prisma/prisma"); // lazy require
+  return PrismaAdapter(prisma);
+}
+
 export const authOptions: NextAuthConfig = {
-  adapter: PrismaAdapter(prisma) as Adapter,
+  adapter: getPrismaAdapter(),
   debug: true,
   providers: [
     GoogleProvider({
@@ -80,7 +86,7 @@ export const authOptions: NextAuthConfig = {
 
         const validPassword = await bcrypt.compare(
           validatedCredentials.data?.password ?? "",
-          user.password,
+          user.password
         );
 
         if (!validPassword) throw new Error("Invalid username or password");
@@ -102,7 +108,7 @@ export const authOptions: NextAuthConfig = {
 
         if (!providerEmail)
           throw new Error(
-            "Google Provider did not return an email. Email is required for siging in with Oauth",
+            "Google Provider did not return an email. Email is required for siging in with Oauth"
           );
 
         const user = await getUserByEmail(providerEmail);
@@ -110,7 +116,7 @@ export const authOptions: NextAuthConfig = {
         if (!user) {
           const createdOauthAccount = await createOAuthAccount(
             account,
-            profile,
+            profile
           ); //Creating a whole new account based on the OAuth user and account if the user does not exist already
 
           //Loggin the newly created OAuth user account
@@ -173,7 +179,7 @@ export const authOptions: NextAuthConfig = {
         token.accessToken = sign(
           { userId: validatedUser.id, role: validatedUser.role },
           parsedEnv.JWT_SECRET,
-          { expiresIn: "15m" },
+          { expiresIn: "15m" }
         );
 
         token.refreshToken = await createRefreshToken(validatedUser.id);
