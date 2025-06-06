@@ -1,0 +1,4 @@
+run = "cd workers && npm run start"
+
+[nix]
+  channel = "stable"
