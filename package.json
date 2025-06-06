@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "npx prisma migrate deploy && next dev",
     "generate": "prisma generate",
-    "build": "npm run generate && next build",
-    "start": "next start",
+    "build": "npm run generate && npx prisma migrate deploy && next build",
+    "start": "npx prisma migrate deploy && next start",
     "lint": "next lint",
     "postinstall": "prisma generate"
   },
