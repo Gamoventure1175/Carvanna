@@ -1,5 +1,6 @@
-import { emailOTPWorker } from "@/lib/queues/email/emailWorker";
-import { serviceReminderWorker } from "@/lib/queues/service/serviceReminderWorker";
+import { emailOTPWorker } from "./emailWorker";
+import { serviceReminderWorker } from "./serviceReminderWorker";
+
 
 // Optionally: graceful shutdown handling
 const shutdown = async () => {

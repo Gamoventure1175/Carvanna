@@ -1,7 +1,10 @@
-import { sendReminderEmail } from "@/lib/email/sendReminderEmail";
-import {prisma} from "@/lib/prisma/prisma";
-import { parsedEnv } from "@/validation/custom/env";
+import { sendReminderEmail } from "../lib/email/sendReminderEmail";
+import { prisma } from "../lib/prisma/prisma";
+import { parsedEnv } from "./loadEnv";
 import { Job, Worker } from "bullmq";
+import Redis from "ioredis";
+
+const redis = new Redis(parsedEnv.REDIS_URL, {maxRetriesPerRequest: null});
 
 export const serviceReminderWorker = new Worker(
   "service-reminder-queue",
@@ -33,7 +36,7 @@ export const serviceReminderWorker = new Worker(
 
     if (!reminderJob) {
       throw new Error(
-        "ReminderJob not found for serviceLogId: " + serviceLogId,
+        "ReminderJob not found for serviceLogId: " + serviceLogId
       );
     }
 
@@ -60,7 +63,7 @@ export const serviceReminderWorker = new Worker(
 
       if (process.env.NODE_ENV !== "production")
         console.log(
-          `Successfully sent reminder email for job ID ${reminderJob.id}`,
+          `Successfully sent reminder email for job ID ${reminderJob.id}`
         );
     } catch (error) {
       if (process.env.NODE_ENV !== "production")
@@ -68,5 +71,7 @@ export const serviceReminderWorker = new Worker(
       throw error;
     }
   },
-  { connection: { url: parsedEnv.REDIS_URL } },
+  {
+    connection: redis
+  }
 );
