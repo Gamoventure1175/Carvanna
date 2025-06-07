@@ -23,6 +23,14 @@ jobs:
         run: npm ci
 
       - name: Run Prisma Migrate
-        run: npx prisma migrate deploy
+        run: |
+          for i in {1..5}; do
+            echo "Attempt $i..."
+            if npx prisma migrate deploy; then
+              break
+            fi
+            echo "Migration failed. Retrying in 10s..."
+            sleep 10
+          done
         env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL_NON_POOLING }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL_NON_POOLING }}?statement_timeout=30000&socket_timeout=30
