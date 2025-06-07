@@ -34,4 +34,3 @@ jobs:
           done
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL_NON_POOLING }}?statement_timeout=30000&socket_timeout=30
-          PRISMA_MIGRATE_ADVISORY_LOCK_TIMEOUT: "60000"
