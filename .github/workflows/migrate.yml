@@ -25,4 +25,4 @@ jobs:
       - name: Run Prisma Migrate
         run: npx prisma migrate deploy
         env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL_NON_POOLING }}
