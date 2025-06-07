@@ -22,6 +22,13 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Wake Supabase DB
+        run: |
+          sudo apt-get install -y postgresql-client
+          PGPASSWORD=${{ secrets.DATABASE_PASSWORD }} \
+          psql -h db.uotgejetnoztmvlgshqt.supabase.co -U ${{ secrets.DATABASE_USER }} -d postgres -p 5432 -c "SELECT now();"
+      
+
       - name: Run Prisma Migrate
         run: |
           for i in {1..5}; do
